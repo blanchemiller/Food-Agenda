@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2A9D8F">
     <title>Food Agenda</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
 
@@ -17,7 +17,7 @@
             --bg: #F0F4F8;
             --card: #FFFFFF;
             --text: #1F2937;
-            --text-secondary: #6B7280;
+            --text2: #6B7280;
             --border: #E5E7EB;
             --success: #10B981;
             --success-bg: #ECFDF5;
@@ -33,18 +33,13 @@
             --bg: #111827;
             --card: #1F2937;
             --text: #F9FAFB;
-            --text-secondary: #9CA3AF;
+            --text2: #9CA3AF;
             --border: #374151;
             --primary-light: #1A3A35;
             --shadow: 0 2px 12px rgba(0,0,0,0.3);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
         body {
             font-family: 'Cairo', sans-serif;
@@ -55,25 +50,10 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* ===== PAGES ===== */
-        .page {
-            display: none;
-            padding: 20px 16px;
-            max-width: 500px;
-            margin: 0 auto;
-            animation: fadeIn 0.3s ease;
-        }
+        .page { display:none; padding:20px 16px; max-width:500px; margin:0 auto; animation: fadeIn 0.3s ease; }
+        .page.active { display:block; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ===== HEADER ===== */
         .top-header {
             background: linear-gradient(135deg, var(--primary-dark), var(--primary));
             color: white;
@@ -82,19 +62,9 @@
             margin: -20px -16px 20px;
             text-align: center;
         }
+        .top-header h1 { font-size:26px; font-weight:900; }
+        .top-header p { font-size:14px; opacity:0.85; margin-top:4px; }
 
-        .top-header h1 {
-            font-size: 26px;
-            font-weight: 900;
-        }
-
-        .top-header p {
-            font-size: 14px;
-            opacity: 0.85;
-            margin-top: 4px;
-        }
-
-        /* ===== CARDS ===== */
         .card {
             background: var(--card);
             border-radius: var(--radius);
@@ -103,111 +73,103 @@
             box-shadow: var(--shadow);
             border: 1px solid var(--border);
         }
+        .card-title { font-size:18px; font-weight:800; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
 
-        .card-title {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--text);
-            margin-bottom: 12px;
+        .input-group { margin-bottom:14px; }
+        .input-group label { display:block; font-size:15px; font-weight:700; margin-bottom:6px; }
+        .input-field {
+            width:100%; padding:14px 16px; border:2px solid var(--border); border-radius:12px;
+            font-family:'Cairo'; font-size:17px; font-weight:600; color:var(--text);
+            background:var(--card); outline:none; transition:border-color 0.2s;
+        }
+        .input-field:focus { border-color:var(--primary); }
+        .input-field::placeholder { color:var(--text2); font-weight:400; }
+        textarea.input-field { min-height:80px; resize:vertical; line-height:1.6; }
+
+        .btn {
+            width:100%; padding:16px; border:none; border-radius:14px;
+            font-family:'Cairo'; font-size:18px; font-weight:800; cursor:pointer;
+            transition:all 0.2s; display:flex; align-items:center; justify-content:center;
+            gap:10px; margin-bottom:12px;
+        }
+        .btn:active { transform:scale(0.97); }
+        .btn-primary { background:linear-gradient(135deg,var(--primary),var(--primary-dark)); color:white; box-shadow:0 4px 15px rgba(42,157,143,0.3); }
+        .btn-success { background:linear-gradient(135deg,#10B981,#059669); color:white; }
+        .btn-warning { background:linear-gradient(135deg,#F59E0B,#D97706); color:white; }
+        .btn-info { background:linear-gradient(135deg,#3B82F6,#2563EB); color:white; }
+        .btn-outline { background:var(--card); color:var(--primary); border:2px solid var(--primary); }
+        .btn-small { padding:10px 16px; font-size:14px; width:auto; margin-bottom:0; }
+        .btn-danger { background:linear-gradient(135deg,#EF4444,#DC2626); color:white; }
+
+        /* ===== CALENDAR ===== */
+        .calendar {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 16px;
+            border: 1px solid var(--border);
+        }
+        .cal-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            margin-bottom: 12px;
         }
-
-        /* ===== INPUTS ===== */
-        .input-group {
-            margin-bottom: 14px;
+        .cal-header h3 { font-size:18px; font-weight:800; }
+        .cal-nav {
+            width:40px; height:40px; border-radius:10px; border:2px solid var(--border);
+            background:var(--card); font-size:18px; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; color:var(--text);
         }
-
-        .input-group label {
-            display: block;
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 6px;
+        .cal-days-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
         }
-
-        .input-field {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--text);
-            background: var(--card);
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .input-field:focus {
-            border-color: var(--primary);
-        }
-
-        .input-field::placeholder {
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-
-        textarea.input-field {
-            min-height: 80px;
-            resize: vertical;
-            line-height: 1.6;
-        }
-
-        /* ===== BUTTONS ===== */
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 14px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 18px;
+        .cal-days-header span {
+            text-align: center;
+            font-size: 13px;
             font-weight: 800;
-            cursor: pointer;
-            transition: all 0.2s;
+            color: var(--text2);
+            padding: 4px 0;
+        }
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        .cal-day {
+            aspect-ratio: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 12px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            color: var(--text);
+        }
+        .cal-day:hover { background: var(--primary-light); }
+        .cal-day.empty { cursor:default; }
+        .cal-day.today { border-color: var(--primary); color: var(--primary); }
+        .cal-day.selected { background: var(--primary); color: white; }
+        .cal-day.in-week { background: var(--primary-light); color: var(--primary-dark); }
+        .cal-day.other-month { color: var(--text2); opacity:0.4; }
+
+        .week-display {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--primary-light);
+            border-radius: 10px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary-dark);
         }
 
-        .btn:active {
-            transform: scale(0.97);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            box-shadow: 0 4px 15px rgba(42, 157, 143, 0.3);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #10B981, #059669);
-            color: white;
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #F59E0B, #D97706);
-            color: white;
-        }
-
-        .btn-outline {
-            background: var(--card);
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .btn-small {
-            padding: 10px 16px;
-            font-size: 14px;
-            width: auto;
-            margin-bottom: 0;
-        }
-
-        /* ===== MEAL CARD ===== */
+        /* ===== MEALS ===== */
         .meal-card {
             background: var(--card);
             border-radius: var(--radius);
@@ -216,7 +178,6 @@
             border: 1px solid var(--border);
             overflow: hidden;
         }
-
         .meal-header {
             padding: 14px 18px;
             display: flex;
@@ -224,815 +185,766 @@
             justify-content: space-between;
             cursor: pointer;
         }
-
-        .meal-header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .meal-icon {
-            font-size: 28px;
-        }
-
-        .meal-name {
-            font-size: 18px;
-            font-weight: 800;
-        }
-
-        .meal-status {
-            font-size: 13px;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 20px;
-        }
-
-        .status-done {
-            background: var(--success-bg);
-            color: var(--success);
-        }
-
-        .status-pending {
-            background: var(--warning-bg);
-            color: var(--warning);
-        }
-
-        .meal-body {
-            padding: 0 18px 18px;
-            display: none;
-        }
-
-        .meal-body.open {
-            display: block;
-        }
-
-        .time-input-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .time-input-row label {
-            font-size: 15px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
+        .meal-header-right { display:flex; align-items:center; gap:10px; }
+        .meal-icon { font-size:28px; }
+        .meal-name { font-size:18px; font-weight:800; }
+        .meal-status { font-size:13px; font-weight:700; padding:4px 12px; border-radius:20px; }
+        .status-done { background:var(--success-bg); color:var(--success); }
+        .status-pending { background:var(--warning-bg); color:var(--warning); }
+        .meal-body { padding:0 18px 18px; display:none; }
+        .meal-body.open { display:block; }
+        .time-input-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+        .time-input-row label { font-size:15px; font-weight:700; white-space:nowrap; }
         .time-input {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 17px;
-            font-weight: 700;
-            text-align: center;
-            color: var(--text);
-            background: var(--card);
-            outline: none;
+            flex:1; padding:12px; border:2px solid var(--border); border-radius:10px;
+            font-family:'Cairo'; font-size:17px; font-weight:700; text-align:center;
+            color:var(--text); background:var(--card); outline:none;
         }
+        .time-input:focus { border-color:var(--primary); }
 
-        .time-input:focus {
-            border-color: var(--primary);
-        }
-
-        /* ===== WATER TRACKER ===== */
-        .water-grid {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 8px;
-            margin-top: 10px;
-        }
-
+        /* ===== WATER ===== */
+        .water-grid { display:grid; grid-template-columns:repeat(8,1fr); gap:8px; margin-top:10px; }
         .water-cup {
-            aspect-ratio: 1;
-            border: 2px solid #93C5FD;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: var(--card);
+            aspect-ratio:1; border:2px solid #93C5FD; border-radius:12px;
+            display:flex; align-items:center; justify-content:center; font-size:22px;
+            cursor:pointer; transition:all 0.2s; background:var(--card);
         }
+        .water-cup.filled { background:#DBEAFE; border-color:#3B82F6; }
+        .dark .water-cup.filled { background:#1E3A5F; }
 
-        .water-cup.filled {
-            background: #DBEAFE;
-            border-color: #3B82F6;
-        }
-
-        .dark .water-cup.filled {
-            background: #1E3A5F;
-        }
-
-        /* ===== MOOD SELECTOR ===== */
-        .mood-grid {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 10px;
-        }
-
+        /* ===== MOOD ===== */
+        .mood-grid { display:flex; justify-content:space-around; margin-top:10px; }
         .mood-btn {
-            font-size: 36px;
-            background: none;
-            border: 3px solid transparent;
-            border-radius: 50%;
-            padding: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            opacity: 0.4;
+            font-size:36px; background:none; border:3px solid transparent;
+            border-radius:50%; padding:8px; cursor:pointer; transition:all 0.2s; opacity:0.4;
         }
+        .mood-btn.selected { opacity:1; border-color:var(--primary); background:var(--primary-light); transform:scale(1.15); }
 
-        .mood-btn.selected {
-            opacity: 1;
-            border-color: var(--primary);
-            background: var(--primary-light);
-            transform: scale(1.15);
+        /* ===== DATE NAV ===== */
+        .date-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+        .date-nav-btn {
+            width:44px; height:44px; border-radius:12px; border:2px solid var(--border);
+            background:var(--card); font-size:20px; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; color:var(--text);
         }
+        .date-display { font-size:18px; font-weight:800; color:var(--primary); }
 
-        /* ===== WEEKLY SUMMARY ===== */
-        .day-summary {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border);
+        /* ===== REPORT VIEW ===== */
+        .report-container {
+            background: white;
+            color: #1F2937;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
         }
-
-        .day-summary:last-child {
-            border-bottom: none;
-        }
-
-        .day-summary-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .day-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .day-name-text {
-            font-size: 17px;
-            font-weight: 700;
-        }
-
-        .day-meals-count {
-            font-size: 15px;
-            font-weight: 700;
-            padding: 4px 14px;
-            border-radius: 20px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 16px;
-            background: var(--border);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 12px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-
-        .progress-text {
+        .report-header {
             text-align: center;
-            font-size: 28px;
-            font-weight: 900;
-            margin-top: 8px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid #E5E7EB;
+            margin-bottom: 14px;
         }
+        .report-header h2 { font-size:20px; color:#2A9D8F; font-weight:900; }
+        .report-header p { font-size:13px; color:#6B7280; }
+        .report-day {
+            background: #F9FAFB;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border-right: 4px solid #2A9D8F;
+        }
+        .report-day-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #1F2937;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .report-meal {
+            font-size: 14px;
+            color: #374151;
+            padding: 4px 0;
+            line-height: 1.6;
+        }
+        .report-meal b { color: #2A9D8F; }
+        .report-footer {
+            text-align: center;
+            padding-top: 12px;
+            border-top: 2px solid #E5E7EB;
+            margin-top: 14px;
+            font-size: 12px;
+            color: #9CA3AF;
+        }
+
+        /* ===== SUMMARY ===== */
+        .day-summary {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:14px 0; border-bottom:1px solid var(--border);
+        }
+        .day-summary:last-child { border-bottom:none; }
+        .day-summary-right { display:flex; align-items:center; gap:10px; }
+        .day-dot { width:12px; height:12px; border-radius:50%; }
+        .day-name-text { font-size:17px; font-weight:700; }
+        .day-meals-count { font-size:15px; font-weight:700; padding:4px 14px; border-radius:20px; }
+        .progress-bar { width:100%; height:16px; background:var(--border); border-radius:10px; overflow:hidden; margin-top:12px; }
+        .progress-fill { height:100%; border-radius:10px; transition:width 0.5s ease; }
+        .progress-text { text-align:center; font-size:28px; font-weight:900; margin-top:8px; }
 
         /* ===== BOTTOM NAV ===== */
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--card);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-            padding-bottom: max(8px, env(safe-area-inset-bottom));
-            z-index: 1000;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+            position:fixed; bottom:0; left:0; right:0; background:var(--card);
+            border-top:1px solid var(--border); display:flex; justify-content:space-around;
+            padding:8px 0; padding-bottom:max(8px,env(safe-area-inset-bottom));
+            z-index:1000; box-shadow:0 -4px 20px rgba(0,0,0,0.08);
         }
-
         .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            padding: 6px 12px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            color: var(--text-secondary);
-            font-family: 'Cairo', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            transition: color 0.2s;
+            display:flex; flex-direction:column; align-items:center; gap:2px;
+            padding:6px 12px; border:none; background:none; cursor:pointer;
+            color:var(--text2); font-family:'Cairo'; font-size:12px; font-weight:700;
         }
+        .nav-item.active { color:var(--primary); }
+        .nav-item .nav-icon { font-size:24px; }
 
-        .nav-item.active {
-            color: var(--primary);
-        }
-
-        .nav-item .nav-icon {
-            font-size: 24px;
-        }
-
-        /* ===== THEME TOGGLE ===== */
         .theme-toggle {
-            position: fixed;
-            top: 12px;
-            left: 12px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--card);
-            border: 1px solid var(--border);
-            font-size: 20px;
-            cursor: pointer;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow);
+            position:fixed; top:12px; left:12px; width:40px; height:40px;
+            border-radius:50%; background:var(--card); border:1px solid var(--border);
+            font-size:20px; cursor:pointer; z-index:100;
+            display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow);
         }
 
-        /* ===== TOAST ===== */
         .toast {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100px);
-            background: var(--success);
-            color: white;
-            padding: 14px 24px;
-            border-radius: 12px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 16px;
-            font-weight: 700;
-            z-index: 9999;
-            transition: transform 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px);
+            background:var(--success); color:white; padding:14px 24px; border-radius:12px;
+            font-family:'Cairo'; font-size:16px; font-weight:700; z-index:9999;
+            transition:transform 0.3s ease; box-shadow:0 4px 15px rgba(0,0,0,0.2);
         }
+        .toast.show { transform:translateX(-50%) translateY(0); }
 
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* ===== DATE NAV ===== */
-        .date-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-
-        .date-nav-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            border: 2px solid var(--border);
-            background: var(--card);
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text);
-        }
-
-        .date-display {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        /* ===== WHATSAPP CONFIG ===== */
-        .config-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .config-row label {
-            font-size: 14px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .config-row input {
-            flex: 1;
-            padding: 10px;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 15px;
-            color: var(--text);
-            background: var(--card);
-            outline: none;
+        @media print {
+            body * { visibility:hidden; }
+            #printArea, #printArea * { visibility:visible; }
+            #printArea { position:absolute; top:0; right:0; width:100%; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Theme Toggle -->
-    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+<div class="toast" id="toast"></div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
-
-    <!-- ==================== PAGE 1: HOME ==================== -->
-    <div class="page active" id="page-home">
-        <div class="top-header">
-            <h1>🥗 Food Agenda</h1>
-            <p>سجّل أكلك يومياً وتابع صحتك</p>
-        </div>
-
-        <div class="card">
-            <div class="card-title">👤 بياناتك</div>
-            <div class="input-group">
-                <label>اسمك</label>
-                <input type="text" class="input-field" id="patientName" placeholder="اكتب اسمك هنا...">
-            </div>
-            <div class="input-group">
-                <label>رقم أسبوع المتابعة</label>
-                <input type="text" class="input-field" id="weekNum" placeholder="مثال: 1">
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">⚙️ إعدادات الإرسال</div>
-            <div class="config-row">
-                <label>📱 واتساب الدكتور:</label>
-                <input type="tel" class="input-field" id="doctorPhone" placeholder="201012345678" style="font-size:15px; padding:10px;">
-            </div>
-            <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">
-                اكتب رقم الواتساب بالكود الدولي بدون + أو مسافات
-            </p>
-        </div>
-
-        <button class="btn btn-primary" onclick="goToPage('daily')">
-            ▶️ ابدأ تسجيل اليوم
-        </button>
-
-        <button class="btn btn-outline" onclick="goToPage('weekly')">
-            📅 عرض ملخص الأسبوع
-        </button>
+<!-- ========== PAGE 1: HOME ========== -->
+<div class="page active" id="page-home">
+    <div class="top-header">
+        <h1>🥗 Food Agenda</h1>
+        <p>سجّل أكلك يومياً وتابع صحتك</p>
     </div>
 
-    <!-- ==================== PAGE 2: DAILY LOG ==================== -->
-    <div class="page" id="page-daily">
-        <div class="top-header">
-            <h1>📝 تسجيل اليوم</h1>
-            <p id="todayDate"></p>
+    <div class="card">
+        <div class="card-title">👤 بياناتك</div>
+        <div class="input-group">
+            <label>اسمك</label>
+            <input type="text" class="input-field" id="patientName" placeholder="اكتب اسمك هنا...">
         </div>
-
-        <div class="date-nav">
-            <button class="date-nav-btn" onclick="changeDay(-1)">→</button>
-            <span class="date-display" id="dateDisplay"></span>
-            <button class="date-nav-btn" onclick="changeDay(1)">←</button>
-        </div>
-
-        <div id="mealsContainer"></div>
-
-        <!-- Water -->
-        <div class="card">
-            <div class="card-title">💧 شرب الماء</div>
-            <p style="font-size:15px; color:var(--text-secondary); margin-bottom:8px;">اضغط على كل كوب تشربه</p>
-            <div class="water-grid" id="waterGrid"></div>
-        </div>
-
-        <!-- Mood -->
-        <div class="card">
-            <div class="card-title">😊 إزاي حاسس النهاردة؟</div>
-            <div class="mood-grid" id="moodGrid">
-                <button class="mood-btn" onclick="selectMood(this, '😞')">😞</button>
-                <button class="mood-btn" onclick="selectMood(this, '😐')">😐</button>
-                <button class="mood-btn" onclick="selectMood(this, '🙂')">🙂</button>
-                <button class="mood-btn" onclick="selectMood(this, '😊')">😊</button>
-                <button class="mood-btn" onclick="selectMood(this, '🤩')">🤩</button>
-            </div>
-        </div>
-
-        <!-- Notes -->
-        <div class="card">
-            <div class="card-title">📝 ملاحظات</div>
-            <textarea class="input-field" id="dayNotes" placeholder="أي ملاحظات عن يومك... (جوع، تعب، رياضة...)"></textarea>
-        </div>
-
-        <button class="btn btn-success" onclick="saveDay()">
-            ✅ حفظ تسجيل اليوم
-        </button>
     </div>
 
-    <!-- ==================== PAGE 3: WEEKLY SUMMARY ==================== -->
-    <div class="page" id="page-weekly">
-        <div class="top-header">
-            <h1>📊 ملخص الأسبوع</h1>
-            <p id="weeklyPatientName"></p>
-        </div>
-
-        <div class="card">
-            <div class="card-title">📈 نسبة الالتزام</div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill" style="width:0%; background: var(--success);"></div>
-            </div>
-            <div class="progress-text" id="progressText" style="color: var(--success);">0%</div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">📅 تفاصيل الأيام</div>
-            <div id="weeklyDetails"></div>
-        </div>
-
-        <button class="btn btn-primary" onclick="sendWhatsApp()">
-            📲 إرسال التقرير للدكتور على واتساب
-        </button>
-
-        <button class="btn btn-outline" onclick="window.print()">
-            📥 حفظ كـ PDF
-        </button>
-
-        <button class="btn btn-warning" onclick="clearWeekData()">
-            🗑️ مسح بيانات الأسبوع
-        </button>
+    <div class="card">
+        <div class="card-title">📅 اختر أسبوع المتابعة</div>
+        <p style="font-size:14px; color:var(--text2); margin-bottom:12px;">اضغط على أي يوم في النتيجة والنظام هيحدد الأسبوع تلقائياً (من السبت للجمعة)</p>
+        <div class="calendar" id="calendar"></div>
+        <div class="week-display" id="weekDisplay">لم يتم اختيار أسبوع بعد</div>
     </div>
 
-    <!-- ==================== BOTTOM NAV ==================== -->
-    <nav class="bottom-nav">
-        <button class="nav-item active" onclick="goToPage('home')" id="nav-home">
-            <span class="nav-icon">🏠</span>
-            الرئيسية
-        </button>
-        <button class="nav-item" onclick="goToPage('daily')" id="nav-daily">
-            <span class="nav-icon">📝</span>
-            تسجيل اليوم
-        </button>
-        <button class="nav-item" onclick="goToPage('weekly')" id="nav-weekly">
-            <span class="nav-icon">📊</span>
-            الملخص
-        </button>
-    </nav>
+    <button class="btn btn-primary" onclick="goToPage('daily')">▶️ ابدأ تسجيل اليوم</button>
+    <button class="btn btn-outline" onclick="goToPage('weekly')">📊 عرض ملخص الأسبوع</button>
+</div>
 
-    <script>
-        // ===== DATA =====
-        const MEALS = [
-            { id: 'breakfast', name: 'الإفطار', icon: '🌅', color: '#F59E0B' },
-            { id: 'snack1', name: 'سناك صباحي', icon: '🍎', color: '#EF4444' },
-            { id: 'lunch', name: 'الغداء', icon: '☀️', color: '#10B981' },
-            { id: 'snack2', name: 'سناك مسائي', icon: '☕', color: '#8B5CF6' },
-            { id: 'dinner', name: 'العشاء', icon: '🌙', color: '#3B82F6' }
-        ];
+<!-- ========== PAGE 2: DAILY LOG ========== -->
+<div class="page" id="page-daily">
+    <div class="top-header">
+        <h1>📝 تسجيل اليوم</h1>
+        <p id="todayPatient"></p>
+    </div>
 
-        const DAY_NAMES = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-        const DAY_COLORS = ['#3478B9', '#DB7A22', '#8251A4', '#D05B3D', '#198A80', '#C94E78', '#3F8F52'];
+    <div class="date-nav">
+        <button class="date-nav-btn" onclick="changeDay(-1)">→</button>
+        <span class="date-display" id="dateDisplay"></span>
+        <button class="date-nav-btn" onclick="changeDay(1)">←</button>
+    </div>
 
-        let currentDate = new Date();
+    <div id="mealsContainer"></div>
 
-        // ===== NAVIGATION =====
-        function goToPage(page) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    <div class="card">
+        <div class="card-title">💧 شرب الماء</div>
+        <p style="font-size:15px; color:var(--text2); margin-bottom:8px;">اضغط على كل كوب تشربه</p>
+        <div class="water-grid" id="waterGrid"></div>
+    </div>
 
-            document.getElementById('page-' + page).classList.add('active');
-            document.getElementById('nav-' + page).classList.add('active');
+    <div class="card">
+        <div class="card-title">😊 إزاي حاسس النهاردة؟</div>
+        <div class="mood-grid" id="moodGrid">
+            <button class="mood-btn" onclick="selectMood(this,'😞')">😞</button>
+            <button class="mood-btn" onclick="selectMood(this,'😐')">😐</button>
+            <button class="mood-btn" onclick="selectMood(this,'🙂')">🙂</button>
+            <button class="mood-btn" onclick="selectMood(this,'😊')">😊</button>
+            <button class="mood-btn" onclick="selectMood(this,'🤩')">🤩</button>
+        </div>
+    </div>
 
-            if (page === 'daily') initDailyPage();
-            if (page === 'weekly') initWeeklyPage();
+    <div class="card">
+        <div class="card-title">📝 ملاحظات</div>
+        <textarea class="input-field" id="dayNotes" placeholder="أي ملاحظات عن يومك..."></textarea>
+    </div>
 
-            window.scrollTo(0, 0);
+    <button class="btn btn-success" onclick="saveDay()">✅ حفظ تسجيل اليوم</button>
+    <button class="btn btn-info" onclick="goToPage('report')">📄 عرض ملخص اليوم</button>
+</div>
+
+<!-- ========== PAGE 3: WEEKLY ========== -->
+<div class="page" id="page-weekly">
+    <div class="top-header">
+        <h1>📊 ملخص الأسبوع</h1>
+        <p id="weeklyInfo"></p>
+    </div>
+
+    <div class="card">
+        <div class="card-title">📈 نسبة الالتزام</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-text" id="progressText">0%</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">📅 تفاصيل الأيام</div>
+        <div id="weeklyDetails"></div>
+    </div>
+
+    <button class="btn btn-primary" onclick="goToPage('report')">📄 عرض التقرير الكامل</button>
+</div>
+
+<!-- ========== PAGE 4: REPORT & EXPORT ========== -->
+<div class="page" id="page-report">
+    <div class="top-header">
+        <h1>📤 التقرير</h1>
+        <p>عرض وإرسال التقرير</p>
+    </div>
+
+    <div id="reportArea"></div>
+
+    <button class="btn btn-success" onclick="exportImage()">📸 حفظ كصورة (أرسلها كصورة على واتساب)</button>
+    <button class="btn btn-info" onclick="copyReport()">📋 نسخ التقرير كنص</button>
+    <button class="btn btn-primary" onclick="shareReport()">📤 مشاركة</button>
+    <button class="btn btn-outline" onclick="goToPage('daily')">↩️ رجوع للتسجيل</button>
+</div>
+
+<!-- ========== BOTTOM NAV ========== -->
+<nav class="bottom-nav">
+    <button class="nav-item active" onclick="goToPage('home')" id="nav-home">
+        <span class="nav-icon">🏠</span>الرئيسية
+    </button>
+    <button class="nav-item" onclick="goToPage('daily')" id="nav-daily">
+        <span class="nav-icon">📝</span>تسجيل
+    </button>
+    <button class="nav-item" onclick="goToPage('weekly')" id="nav-weekly">
+        <span class="nav-icon">📊</span>ملخص
+    </button>
+    <button class="nav-item" onclick="goToPage('report')" id="nav-report">
+        <span class="nav-icon">📤</span>تقرير
+    </button>
+</nav>
+
+<script>
+// ===== CONSTANTS =====
+const MEALS = [
+    { id:'breakfast', name:'الإفطار', icon:'🌅' },
+    { id:'snack1', name:'سناك صباحي', icon:'🍎' },
+    { id:'lunch', name:'الغداء', icon:'☀️' },
+    { id:'snack2', name:'سناك مسائي', icon:'☕' },
+    { id:'dinner', name:'العشاء', icon:'🌙' }
+];
+const DAY_NAMES = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const DAY_COLORS = ['#3478B9','#DB7A22','#8251A4','#D05B3D','#198A80','#C94E78','#3F8F52'];
+const MONTH_NAMES = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+let currentDate = new Date();
+let calMonth = new Date().getMonth();
+let calYear = new Date().getFullYear();
+let selectedWeekStart = null;
+let selectedWeekEnd = null;
+
+// ===== NAVIGATION =====
+function goToPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    const navBtn = document.getElementById('nav-' + page);
+    if (navBtn) navBtn.classList.add('active');
+    if (page === 'daily') initDailyPage();
+    if (page === 'weekly') initWeeklyPage();
+    if (page === 'report') initReportPage();
+    window.scrollTo(0, 0);
+}
+
+// ===== THEME =====
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    const isDark = document.body.classList.contains('dark');
+    document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+function loadTheme() {
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+        document.getElementById('themeBtn').textContent = '☀️';
+    }
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== CALENDAR =====
+function renderCalendar() {
+    const cal = document.getElementById('calendar');
+    const firstDay = new Date(calYear, calMonth, 1);
+    const lastDay = new Date(calYear, calMonth + 1, 0);
+    const startDay = firstDay.getDay();
+    const daysInMonth = lastDay.getDate();
+    const today = new Date();
+
+    let html = `
+        <div class="cal-header">
+            <button class="cal-nav" onclick="calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar()">→</button>
+            <h3>${MONTH_NAMES[calMonth]} ${calYear}</h3>
+            <button class="cal-nav" onclick="calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar()">←</button>
+        </div>
+        <div class="cal-days-header">
+            <span>س</span><span>ح</span><span>ن</span><span>ث</span><span>ر</span><span>خ</span><span>ج</span>
+        </div>
+        <div class="cal-grid">
+    `;
+
+    // Reorder: Saturday first (index 6 in JS)
+    const order = [6, 0, 1, 2, 3, 4, 5];
+    const startOffset = order.indexOf(startDay);
+
+    for (let i = 0; i < startOffset; i++) {
+        html += `<div class="cal-day empty"></div>`;
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(calYear, calMonth, d);
+        const dateKey = getDateKey(date);
+        const isToday = dateKey === getDateKey(today);
+        const isSelected = selectedWeekStart && dateKey === getDateKey(selectedWeekStart);
+        const isInWeek = selectedWeekStart && selectedWeekEnd && date >= selectedWeekStart && date <= selectedWeekEnd;
+
+        let cls = 'cal-day';
+        if (isToday) cls += ' today';
+        if (isSelected) cls += ' selected';
+        else if (isInWeek) cls += ' in-week';
+
+        html += `<div class="${cls}" onclick="selectWeekDate(${calYear},${calMonth},${d})">${d}</div>`;
+    }
+
+    html += `</div>`;
+    cal.innerHTML = html;
+}
+
+function selectWeekDate(y, m, d) {
+    const clicked = new Date(y, m, d);
+    const dayOfWeek = clicked.getDay();
+    // Calculate Saturday (start of week)
+    const diffToSat = (dayOfWeek + 1) % 7;
+    selectedWeekStart = new Date(clicked);
+    selectedWeekStart.setDate(clicked.getDate() - diffToSat);
+    selectedWeekEnd = new Date(selectedWeekStart);
+    selectedWeekEnd.setDate(selectedWeekStart.getDate() + 6);
+
+    const fmt = (dt) => `${DAY_NAMES[dt.getDay()]} ${dt.getDate()} ${MONTH_NAMES[dt.getMonth()]}`;
+    document.getElementById('weekDisplay').innerHTML =
+        `✅ الأسبوع من <strong>${fmt(selectedWeekStart)}</strong> إلى <strong>${fmt(selectedWeekEnd)}</strong>`;
+
+    currentDate = new Date(selectedWeekStart);
+    renderCalendar();
+    saveSettings();
+}
+
+// ===== DATE HELPERS =====
+function getDateKey(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
+
+function formatDate(date) {
+    return `${DAY_NAMES[date.getDay()]} ${date.getDate()}/${date.getMonth() + 1}`;
+}
+
+function changeDay(offset) {
+    currentDate.setDate(currentDate.getDate() + offset);
+    initDailyPage();
+}
+
+// ===== DAILY PAGE =====
+function initDailyPage() {
+    const name = document.getElementById('patientName').value || 'ضيف';
+    document.getElementById('todayPatient').textContent = `👤 ${name}`;
+    document.getElementById('dateDisplay').textContent = formatDate(currentDate);
+
+    const dateKey = getDateKey(currentDate);
+    const dayData = getDayData(dateKey);
+    const container = document.getElementById('mealsContainer');
+    container.innerHTML = '';
+
+    MEALS.forEach(meal => {
+        const md = dayData.meals[meal.id] || {};
+        const hasData = md.time || md.food;
+        container.innerHTML += `
+            <div class="meal-card">
+                <div class="meal-header" onclick="toggleMeal('${meal.id}')">
+                    <div class="meal-header-right">
+                        <span class="meal-icon">${meal.icon}</span>
+                        <span class="meal-name">${meal.name}</span>
+                    </div>
+                    <span class="meal-status ${hasData?'status-done':'status-pending'}" id="status-${meal.id}">
+                        ${hasData?'✅ تم':'⏳ لم يُسجل'}
+                    </span>
+                </div>
+                <div class="meal-body" id="body-${meal.id}">
+                    <div class="time-input-row">
+                        <label>⏰ وقت الأكل:</label>
+                        <input type="time" class="time-input" id="time-${meal.id}" value="${md.time||''}">
+                    </div>
+                    <div class="input-group">
+                        <label>🍽️ ماذا أكلت؟</label>
+                        <textarea class="input-field" id="food-${meal.id}" placeholder="اكتب كل اللي أكلته...">${md.food||''}</textarea>
+                    </div>
+                    <button class="btn btn-success btn-small" onclick="saveMeal('${meal.id}')">✅ حفظ الوجبة</button>
+                </div>
+            </div>
+        `;
+    });
+
+    // Water
+    const wg = document.getElementById('waterGrid');
+    wg.innerHTML = '';
+    for (let i = 1; i <= 8; i++) {
+        const filled = (dayData.water || 0) >= i;
+        wg.innerHTML += `<div class="water-cup ${filled?'filled':''}" onclick="setWater(${i})">${filled?'💧':'○'}</div>`;
+    }
+
+    // Mood
+    document.querySelectorAll('.mood-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.textContent.trim() === dayData.mood);
+    });
+
+    document.getElementById('dayNotes').value = dayData.notes || '';
+}
+
+function toggleMeal(id) { document.getElementById('body-' + id).classList.toggle('open'); }
+
+function saveMeal(id) {
+    const dateKey = getDateKey(currentDate);
+    const dayData = getDayData(dateKey);
+    dayData.meals[id] = {
+        time: document.getElementById('time-' + id).value,
+        food: document.getElementById('food-' + id).value
+    };
+    saveDayData(dateKey, dayData);
+    const s = document.getElementById('status-' + id);
+    s.className = 'meal-status status-done';
+    s.textContent = '✅ تم';
+    showToast('✅ تم حفظ الوجبة');
+}
+
+function setWater(count) {
+    const dayData = getDayData(getDateKey(currentDate));
+    dayData.water = count;
+    saveDayData(getDateKey(currentDate), dayData);
+    initDailyPage();
+}
+
+function selectMood(btn, mood) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const dayData = getDayData(getDateKey(currentDate));
+    dayData.mood = mood;
+    saveDayData(getDateKey(currentDate), dayData);
+}
+
+function saveDay() {
+    const dayData = getDayData(getDateKey(currentDate));
+    dayData.notes = document.getElementById('dayNotes').value;
+    saveDayData(getDateKey(currentDate), dayData);
+    showToast('✅ تم حفظ تسجيل اليوم!');
+}
+
+// ===== WEEKLY PAGE =====
+function getWeekDates() {
+    if (selectedWeekStart) {
+        const dates = [];
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(selectedWeekStart);
+            d.setDate(selectedWeekStart.getDate() + i);
+            dates.push(d);
         }
+        return dates;
+    }
+    // Default: last 7 days
+    const dates = [];
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        dates.push(d);
+    }
+    return dates;
+}
 
-        // ===== THEME =====
-        function toggleTheme() {
-            document.body.classList.toggle('dark');
-            const isDark = document.body.classList.contains('dark');
-            document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
+function initWeeklyPage() {
+    const name = document.getElementById('patientName').value || 'ضيف';
+    const dates = getWeekDates();
+    const fmt = (dt) => `${dt.getDate()}/${dt.getMonth()+1}`;
+    document.getElementById('weeklyInfo').textContent =
+        `👤 ${name} | ${fmt(dates[0])} — ${fmt(dates[6])}`;
 
-        function loadTheme() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark');
-                document.getElementById('themeBtn').textContent = '☀️';
-            }
-        }
+    const details = document.getElementById('weeklyDetails');
+    details.innerHTML = '';
+    let totalMeals = 0;
 
-        // ===== TOAST =====
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2500);
-        }
+    dates.forEach(d => {
+        const dateKey = getDateKey(d);
+        const dayData = getDayData(dateKey);
+        let count = 0;
+        MEALS.forEach(m => {
+            if (dayData.meals[m.id] && (dayData.meals[m.id].time || dayData.meals[m.id].food)) count++;
+        });
+        totalMeals += count;
 
-        // ===== DATE HELPERS =====
-        function getDateKey(date) {
-            return date.toISOString().split('T')[0];
-        }
+        let cc, cb;
+        if (count >= 4) { cc='var(--success)'; cb='var(--success-bg)'; }
+        else if (count >= 2) { cc='var(--warning)'; cb='var(--warning-bg)'; }
+        else { cc='var(--danger)'; cb='var(--danger-bg)'; }
 
-        function formatDate(date) {
-            const d = date.getDate();
-            const m = date.getMonth() + 1;
-            const dayName = DAY_NAMES[date.getDay()];
-            return `${dayName} ${d}/${m}`;
-        }
+        details.innerHTML += `
+            <div class="day-summary">
+                <div class="day-summary-right">
+                    <div class="day-dot" style="background:${DAY_COLORS[d.getDay()]}"></div>
+                    <span class="day-name-text">${DAY_NAMES[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}</span>
+                    <span style="font-size:18px">${dayData.mood||''}</span>
+                </div>
+                <span class="day-meals-count" style="color:${cc};background:${cb}">${count}/5 وجبات</span>
+            </div>
+        `;
+    });
 
-        function changeDay(offset) {
-            currentDate.setDate(currentDate.getDate() + offset);
-            initDailyPage();
-        }
+    const pct = Math.round((totalMeals / 35) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = pct + '%';
+    const color = pct >= 70 ? 'var(--success)' : pct >= 40 ? 'var(--warning)' : 'var(--danger)';
+    document.getElementById('progressFill').style.background = color;
+    document.getElementById('progressText').style.color = color;
+}
 
-        // ===== DAILY PAGE =====
-        function initDailyPage() {
-            const name = document.getElementById('patientName').value || 'ضيف';
-            document.getElementById('todayDate').textContent = `👤 ${name}`;
-            document.getElementById('dateDisplay').textContent = formatDate(currentDate);
+// ===== REPORT PAGE =====
+function buildReportHTML() {
+    const name = document.getElementById('patientName').value || 'مريض';
+    const dates = getWeekDates();
+    const fmt = (dt) => `${DAY_NAMES[dt.getDay()]} ${dt.getDate()}/${dt.getMonth()+1}`;
 
-            const dateKey = getDateKey(currentDate);
-            const dayData = getDayData(dateKey);
+    let html = `
+        <div class="report-container" id="reportContent">
+            <div class="report-header">
+                <h2>🥗 تقرير التغذية الأسبوعي</h2>
+                <p>👤 ${name} | ${fmt(dates[0])} — ${fmt(dates[6])}</p>
+            </div>
+    `;
 
-            // Build meals
-            const container = document.getElementById('mealsContainer');
-            container.innerHTML = '';
+    dates.forEach(d => {
+        const dateKey = getDateKey(d);
+        const dayData = getDayData(dateKey);
+        let hasData = false;
+        let mealsHTML = '';
 
-            MEALS.forEach(meal => {
-                const mealData = dayData.meals[meal.id] || {};
-                const hasData = mealData.time || mealData.food;
-                const statusClass = hasData ? 'status-done' : 'status-pending';
-                const statusText = hasData ? '✅ تم' : '⏳ لم يُسجل';
-
-                container.innerHTML += `
-                    <div class="meal-card">
-                        <div class="meal-header" onclick="toggleMeal('${meal.id}')">
-                            <div class="meal-header-right">
-                                <span class="meal-icon">${meal.icon}</span>
-                                <span class="meal-name">${meal.name}</span>
-                            </div>
-                            <span class="meal-status ${statusClass}" id="status-${meal.id}">${statusText}</span>
-                        </div>
-                        <div class="meal-body" id="body-${meal.id}">
-                            <div class="time-input-row">
-                                <label>⏰ وقت الأكل:</label>
-                                <input type="time" class="time-input" id="time-${meal.id}" value="${mealData.time || ''}">
-                            </div>
-                            <div class="input-group">
-                                <label>🍽️ ماذا أكلت؟</label>
-                                <textarea class="input-field" id="food-${meal.id}" placeholder="اكتب كل اللي أكلته في الوجبة دي...">${mealData.food || ''}</textarea>
-                            </div>
-                            <button class="btn btn-success btn-small" onclick="saveMeal('${meal.id}')">
-                                ✅ حفظ الوجبة
-                            </button>
-                        </div>
+        MEALS.forEach(m => {
+            const md = dayData.meals[m.id];
+            if (md && (md.time || md.food)) {
+                hasData = true;
+                mealsHTML += `
+                    <div class="report-meal">
+                        ${m.icon} <b>${m.name}</b> — ${md.time || '—'}
+                        <br>${md.food || '—'}
                     </div>
                 `;
-            });
-
-            // Water
-            const waterGrid = document.getElementById('waterGrid');
-            waterGrid.innerHTML = '';
-            for (let i = 1; i <= 8; i++) {
-                const filled = (dayData.water || 0) >= i;
-                waterGrid.innerHTML += `
-                    <div class="water-cup ${filled ? 'filled' : ''}" onclick="setWater(${i})">
-                        ${filled ? '💧' : '○'}
-                    </div>
-                `;
             }
+        });
 
-            // Mood
-            document.querySelectorAll('.mood-btn').forEach(btn => {
-                btn.classList.toggle('selected', btn.textContent.trim() === dayData.mood);
-            });
-
-            // Notes
-            document.getElementById('dayNotes').value = dayData.notes || '';
+        if (hasData || dayData.water || dayData.notes) {
+            html += `
+                <div class="report-day" style="border-right-color:${DAY_COLORS[d.getDay()]}">
+                    <div class="report-day-title">
+                        <span style="color:${DAY_COLORS[d.getDay()]}">●</span>
+                        ${fmt(d)} ${dayData.mood || ''}
+                    </div>
+                    ${mealsHTML}
+                    ${dayData.water ? `<div class="report-meal">💧 <b>الماء:</b> ${dayData.water}/8 أكواب</div>` : ''}
+                    ${dayData.notes ? `<div class="report-meal">📝 ${dayData.notes}</div>` : ''}
+                </div>
+            `;
         }
+    });
 
-        function toggleMeal(id) {
-            const body = document.getElementById('body-' + id);
-            body.classList.toggle('open');
-        }
+    html += `
+            <div class="report-footer">
+                Food Agenda — عيادة التغذية العلاجية
+            </div>
+        </div>
+    `;
+    return html;
+}
 
-        function saveMeal(id) {
-            const dateKey = getDateKey(currentDate);
-            const dayData = getDayData(dateKey);
+function initReportPage() {
+    document.getElementById('reportArea').innerHTML = buildReportHTML();
+}
 
-            dayData.meals[id] = {
-                time: document.getElementById('time-' + id).value,
-                food: document.getElementById('food-' + id).value
-            };
+// ===== EXPORT FUNCTIONS =====
+async function exportImage() {
+    showToast('⏳ جاري تجهيز الصورة...');
+    const el = document.getElementById('reportContent');
+    try {
+        const canvas = await html2canvas(el, {
+            scale: 2,
+            backgroundColor: '#FFFFFF',
+            useCORS: true,
+            logging: false
+        });
+        const link = document.createElement('a');
+        const name = document.getElementById('patientName').value || 'report';
+        link.download = `food-agenda-${name}-${getDateKey(new Date())}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast('✅ تم حفظ الصورة! ابعثها كصورة على واتساب');
+    } catch (err) {
+        showToast('❌ حدث خطأ، جرب النسخ بدلاً منه');
+    }
+}
 
-            saveDayData(dateKey, dayData);
+function copyReport() {
+    const name = document.getElementById('patientName').value || 'مريض';
+    const dates = getWeekDates();
+    const fmt = (dt) => `${DAY_NAMES[dt.getDay()]} ${dt.getDate()}/${dt.getMonth()+1}`;
 
-            const status = document.getElementById('status-' + id);
-            status.className = 'meal-status status-done';
-            status.textContent = '✅ تم';
+    let text = `📋 تقرير التغذية الأسبوعي\n`;
+    text += `👤 ${name}\n`;
+    text += `📅 ${fmt(dates[0])} — ${fmt(dates[6])}\n`;
+    text += `━━━━━━━━━━━━━━━\n\n`;
 
-            showToast('✅ تم حفظ الوجبة');
-        }
+    dates.forEach(d => {
+        const dayData = getDayData(getDateKey(d));
+        let hasData = false;
+        let dayText = `${fmt(d)} ${dayData.mood||''}\n`;
 
-        function setWater(count) {
-            const dateKey = getDateKey(currentDate);
-            const dayData = getDayData(dateKey);
-            dayData.water = count;
-            saveDayData(dateKey, dayData);
-            initDailyPage();
-        }
+        MEALS.forEach(m => {
+            const md = dayData.meals[m.id];
+            if (md && (md.time || md.food)) {
+                hasData = true;
+                dayText += `${m.icon} ${m.name}: ${md.time||'—'} | ${md.food||'—'}\n`;
+            }
+        });
 
-        function selectMood(btn, mood) {
-            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
+        if (dayData.water) dayText += `💧 ماء: ${dayData.water}/8\n`;
+        if (dayData.notes) dayText += `📝 ${dayData.notes}\n`;
+        if (hasData) text += dayText + `\n`;
+    });
 
-            const dateKey = getDateKey(currentDate);
-            const dayData = getDayData(dateKey);
-            dayData.mood = mood;
-            saveDayData(dateKey, dayData);
-        }
+    navigator.clipboard.writeText(text).then(() => {
+        showToast('✅ تم نسخ التقرير! الصقه في أي محادثة');
+    }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('✅ تم نسخ التقرير!');
+    });
+}
 
-        function saveDay() {
-            const dateKey = getDateKey(currentDate);
-            const dayData = getDayData(dateKey);
-            dayData.notes = document.getElementById('dayNotes').value;
-            saveDayData(dateKey, dayData);
-            showToast('✅ تم حفظ تسجيل اليوم بنجاح!');
-        }
+async function shareReport() {
+    const name = document.getElementById('patientName').value || 'مريض';
+    const text = `تقرير التغذية الأسبوعي — ${name}`;
 
-        // ===== WEEKLY PAGE =====
-        function initWeeklyPage() {
-            const name = document.getElementById('patientName').value || 'ضيف';
-            document.getElementById('weeklyPatientName').textContent = `👤 ${name} — الأسبوع رقم ${document.getElementById('weekNum').value || '1'}`;
-
-            const details = document.getElementById('weeklyDetails');
-            details.innerHTML = '';
-
-            let totalMeals = 0;
-            const maxMeals = 7 * 5;
-
-            for (let i = 6; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                const dateKey = getDateKey(d);
-                const dayData = getDayData(dateKey);
-                const dayName = DAY_NAMES[d.getDay()];
-                const colorIndex = d.getDay();
-
-                let mealCount = 0;
-                MEALS.forEach(m => {
-                    if (dayData.meals[m.id] && (dayData.meals[m.id].time || dayData.meals[m.id].food)) {
-                        mealCount++;
-                    }
+    if (navigator.share) {
+        try {
+            // Try sharing as image
+            const el = document.getElementById('reportContent');
+            const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#FFFFFF' });
+            canvas.toBlob(async (blob) => {
+                const file = new File([blob], 'food-agenda-report.png', { type: 'image/png' });
+                await navigator.share({
+                    title: text,
+                    text: text,
+                    files: [file]
                 });
-
-                totalMeals += mealCount;
-
-                let countClass, countBg;
-                if (mealCount >= 4) { countClass = 'var(--success)'; countBg = 'var(--success-bg)'; }
-                else if (mealCount >= 2) { countClass = 'var(--warning)'; countBg = 'var(--warning-bg)'; }
-                else { countClass = 'var(--danger)'; countBg = 'var(--danger-bg)'; }
-
-                details.innerHTML += `
-                    <div class="day-summary">
-                        <div class="day-summary-right">
-                            <div class="day-dot" style="background:${DAY_COLORS[colorIndex]}"></div>
-                            <span class="day-name-text">${dayName} ${d.getDate()}/${d.getMonth()+1}</span>
-                            <span style="font-size:18px">${dayData.mood || ''}</span>
-                        </div>
-                        <span class="day-meals-count" style="color:${countClass}; background:${countBg}">
-                            ${mealCount}/5 وجبات
-                        </span>
-                    </div>
-                `;
-            }
-
-            const percent = Math.round((totalMeals / maxMeals) * 100);
-            document.getElementById('progressFill').style.width = percent + '%';
-            document.getElementById('progressText').textContent = percent + '%';
-
-            if (percent >= 70) {
-                document.getElementById('progressFill').style.background = 'var(--success)';
-                document.getElementById('progressText').style.color = 'var(--success)';
-            } else if (percent >= 40) {
-                document.getElementById('progressFill').style.background = 'var(--warning)';
-                document.getElementById('progressText').style.color = 'var(--warning)';
-            } else {
-                document.getElementById('progressFill').style.background = 'var(--danger)';
-                document.getElementById('progressText').style.color = 'var(--danger)';
-            }
+            });
+        } catch (err) {
+            // Fallback to text share
+            try {
+                await navigator.share({ title: text, text: text });
+            } catch (e) {}
         }
+    } else {
+        showToast('⚠️ المشاركة غير مدعومة، استخدم النسخ أو حفظ الصورة');
+    }
+}
 
-        // ===== WHATSAPP =====
-        function sendWhatsApp() {
-            const phone = document.getElementById('doctorPhone').value.trim();
-            const name = document.getElementById('patientName').value.trim() || 'مريض';
-            const week = document.getElementById('weekNum').value || '1';
+// ===== STORAGE =====
+function getAllData() { return JSON.parse(localStorage.getItem('foodAgendaData') || '{}'); }
+function getDayData(dateKey) {
+    const all = getAllData();
+    return all[dateKey] || { meals: {}, water: 0, mood: '', notes: '' };
+}
+function saveDayData(dateKey, data) {
+    const all = getAllData();
+    all[dateKey] = data;
+    localStorage.setItem('foodAgendaData', JSON.stringify(all));
+}
 
-            if (!phone) {
-                showToast('⚠️ اكتب رقم واتساب الدكتور في الإعدادات');
-                goToPage('home');
-                return;
-            }
+function saveSettings() {
+    const s = {
+        name: document.getElementById('patientName').value,
+        weekStart: selectedWeekStart ? getDateKey(selectedWeekStart) : null
+    };
+    localStorage.setItem('foodAgendaSettings', JSON.stringify(s));
+}
 
-            let msg = `📋 *تقرير المتابعة الأسبوعي*\n`;
-            msg += `👤 الاسم: ${name}\n`;
-            msg += `📅 الأسبوع رقم: ${week}\n`;
-            msg += `━━━━━━━━━━━━━━━\n\n`;
+function loadSettings() {
+    const s = JSON.parse(localStorage.getItem('foodAgendaSettings') || '{}');
+    if (s.name) document.getElementById('patientName').value = s.name;
+    if (s.weekStart) {
+        const parts = s.weekStart.split('-');
+        selectedWeekStart = new Date(parts[0], parts[1]-1, parts[2]);
+        selectedWeekEnd = new Date(selectedWeekStart);
+        selectedWeekEnd.setDate(selectedWeekStart.getDate() + 6);
+        currentDate = new Date(selectedWeekStart);
+        calMonth = selectedWeekStart.getMonth();
+        calYear = selectedWeekStart.getFullYear();
+        const fmt = (dt) => `${DAY_NAMES[dt.getDay()]} ${dt.getDate()} ${MONTH_NAMES[dt.getMonth()]}`;
+        document.getElementById('weekDisplay').innerHTML =
+            `✅ الأسبوع من <strong>${fmt(selectedWeekStart)}</strong> إلى <strong>${fmt(selectedWeekEnd)}</strong>`;
+    }
+}
 
-            for (let i = 6; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                const dateKey = getDateKey(d);
-                const dayData = getDayData(dateKey);
-                const dayName = DAY_NAMES[d.getDay()];
+document.getElementById('patientName').addEventListener('input', saveSettings);
 
-                let hasMeals = false;
-                let dayMsg = `*${dayName} ${d.getDate()}/${d.getMonth()+1}* ${dayData.mood || ''}\n`;
-
-                MEALS.forEach(m => {
-                    const meal = dayData.meals[m.id];
-                    if (meal && (meal.time || meal.food)) {
-                        hasMeals = true;
-                        dayMsg += `${m.icon} ${m.name}: ${meal.time || '—'} | ${meal.food || '—'}\n`;
-                    }
-                });
-
-                if (dayData.water) dayMsg += `💧 ماء: ${dayData.water}/8\n`;
-                if (dayData.notes) dayMsg += `📝 ${dayData.notes}\n`;
-
-                if (hasMeals) msg += dayMsg + `\n`;
-            }
-
-            const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-            window.open(url, '_blank');
-        }
-
-        // ===== STORAGE =====
-        function getAllData() {
-            return JSON.parse(localStorage.getItem('foodAgendaData') || '{}');
-        }
-
-        function getDayData(dateKey) {
-            const all = getAllData();
-            return all[dateKey] || { meals: {}, water: 0, mood: '', notes: '' };
-        }
-
-        function saveDayData(dateKey, data) {
-            const all = getAllData();
-            all[dateKey] = data;
-            localStorage.setItem('foodAgendaData', JSON.stringify(all));
-        }
-
-        function clearWeekData() {
-            if (!confirm('هل أنت متأكد من مسح بيانات الأسبوع؟')) return;
-            const all = getAllData();
-            for (let i = 0; i < 7; i++) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                delete all[getDateKey(d)];
-            }
-            localStorage.setItem('foodAgendaData', JSON.stringify(all));
-            initWeeklyPage();
-            showToast('🗑️ تم مسح البيانات');
-        }
-
-        // ===== LOAD SETTINGS =====
-        function loadSettings() {
-            const settings = JSON.parse(localStorage.getItem('foodAgendaSettings') || '{}');
-            if (settings.name) document.getElementById('patientName').value = settings.name;
-            if (settings.week) document.getElementById('weekNum').value = settings.week;
-            if (settings.phone) document.getElementById('doctorPhone').value = settings.phone;
-        }
-
-        function saveSettings() {
-            const settings = {
-                name: document.getElementById('patientName').value,
-                week: document.getElementById('weekNum').value,
-                phone: document.getElementById('doctorPhone').value
-            };
-            localStorage.setItem('foodAgendaSettings', JSON.stringify(settings));
-        }
-
-        document.getElementById('patientName').addEventListener('input', saveSettings);
-        document.getElementById('weekNum').addEventListener('input', saveSettings);
-        document.getElementById('doctorPhone').addEventListener('input', saveSettings);
-
-        // ===== INIT =====
-        loadTheme();
-        loadSettings();
-    </script>
+// ===== INIT =====
+loadTheme();
+loadSettings();
+renderCalendar();
+</script>
 </body>
 </html>
