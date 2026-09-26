@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#157EAF">
+    <meta name="theme-color" content="#FFFFFF">
     <title>Food Agenda</title>
     <link rel="icon" type="image/png" href="logo.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -18,17 +18,20 @@
             --brand-pink-dark: #A5296F;
             --primary-light: #EBF5FA;
             --pink-light: #FDF0F7;
+            
             --bg: #F4F7FB;
             --card: #FFFFFF;
             --text: #1E293B;
             --text2: #64748B;
             --border: #E2E8F0;
+            
             --success: #10B981;
             --success-bg: #ECFDF5;
             --warning: #F59E0B;
             --warning-bg: #FFFBEB;
             --danger: #EF4444;
             --danger-bg: #FEF2F2;
+            
             --shadow: 0 4px 20px rgba(21, 126, 175, 0.08);
             --shadow-glow: 0 0 15px rgba(202, 59, 140, 0.2);
             --radius: 18px;
@@ -63,32 +66,50 @@
             to { opacity:1; transform:translateY(0) scale(1); }
         }
 
-        /* ===== HEADER — لون واحد ثابت ===== */
+        /* ===== الهيدر الفاتح الأنيق ===== */
         .top-header {
-            background: var(--brand-blue);
-            color: white;
-            padding: 28px 20px 22px;
+            background: #FFFFFF;
+            color: var(--text);
+            padding: 24px 20px 20px;
             border-radius: 0 0 26px 26px;
             margin: -16px -16px 20px;
             text-align: center;
-            box-shadow: 0 6px 20px rgba(21, 126, 175, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border-bottom: 1.5px solid #EDF2F7;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
-
-        /* ===== LOGO — أكبر وأوضح ===== */
-        .logo-img {
-            max-height: 100px;
-            max-width: 220px;
-            object-fit: contain;
-            margin-bottom: 8px;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+        .dark .top-header {
+            background: #1E293B;
+            border-bottom-color: #334155;
         }
 
-        .top-header h1 { font-size:22px; font-weight:900; }
-        .top-header p { font-size:13px; opacity:0.9; margin-top:2px; font-weight:600; }
+        /* ===== اللوجو بحجم كبير وواضح ===== */
+        .logo-img {
+            max-height: 140px;
+            max-width: 280px;
+            width: auto;
+            object-fit: contain;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.04));
+        }
+
+        .top-header h1 { 
+            font-size: 20px; 
+            font-weight: 900; 
+            color: var(--brand-blue);
+            letter-spacing: -0.3px;
+        }
+        .dark .top-header h1 { color: #52B4E5; }
+
+        .top-header p { 
+            font-size: 13px; 
+            color: var(--text2); 
+            margin-top: 2px; 
+            font-weight: 600; 
+        }
 
         .card {
             background: var(--card);
@@ -484,7 +505,7 @@ function initWeeklyPage(){
 
 function buildReportHTML(){
     const name=document.getElementById('patientName').value||'مريض',dates=getWeekDates(),fmt=dt=>`${DAY_NAMES[dt.getDay()]} ${dt.getDate()}/${dt.getMonth()+1}`;
-    let h=`<div class="report-container" id="reportContent"><div class="report-header"><img src="logo.png" alt="Logo" style="max-height:80px;margin-bottom:6px;" onerror="this.style.display='none'"><h2>🥗 تقرير متابعة التغذية</h2><p>👤 ${name} | ${fmt(dates[0])} — ${fmt(dates[6])}</p></div>`;
+    let h=`<div class="report-container" id="reportContent"><div class="report-header"><img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'"><h2>🥗 تقرير متابعة التغذية</h2><p>👤 ${name} | ${fmt(dates[0])} — ${fmt(dates[6])}</p></div>`;
     dates.forEach(d=>{const dd=getDayData(getDateKey(d));let has=false,mh='';
     MEALS.forEach(m=>{const md=dd.meals[m.id];if(md&&(md.time||md.food)){has=true;mh+=`<div class="report-meal">${m.icon} <b>${m.name}</b> (${formatTime12(md.time)})<br>↤ ${md.food||'—'}</div>`;}});
     if(has||dd.water||dd.notes) h+=`<div class="report-day" style="border-right-color:${DAY_COLORS[d.getDay()]}"><div class="report-day-title"><span style="color:${DAY_COLORS[d.getDay()]}">●</span> ${fmt(d)} ${dd.mood||''}</div>${mh}${dd.water?`<div class="report-meal">💧 <b>الماء:</b> ${dd.water}/8</div>`:''}${dd.notes?`<div class="report-meal">📝 ${dd.notes}</div>`:''}</div>`;});
