@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Food Agenda — سجل غذائي أسبوعي</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
+
+        :root {
+            --primary: #287F73;
+            --primary-dark: #1F5F58;
+            --navy: #264653;
+            --background: #EAE5DC;
+            --border: #DDE4E2;
+            --text: #263238;
+            --muted: #667085;
+
+            --breakfast-bg: #FFFBEA;
+            --breakfast-color: #B26A00;
+
+            --snack-bg: #FFF3E8;
+            --snack-color: #C45722;
+
+            --lunch-bg: #EFF9ED;
+            --lunch-color: #347B3E;
+
+            --dinner-bg: #EEF0FA;
+            --dinner-color: #3E4F92;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        body {
+            font-family: "Cairo", sans-serif;
+            background: var(--background);
+            color: var(--text);
+            padding: 16px;
+        }
+
+        /* =========================
+           شريط التحكم
+        ========================= */
+
+        .toolbar {
+            width: 210mm;
+            max-width: 100%;
+            margin: 0 auto 12px;
+            padding: 11px 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .toolbar-title strong {
+            display: block;
+            color: var(--primary-dark);
+            font-size: 15px;
+        }
+
+        .toolbar-title span {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .toolbar-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .button {
+            border: 0;
+            border-radius: 8px;
+            padding: 9px 16px;
+
+            font-family: "Cairo", sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-1px);
+        }
+
+        .button-clear {
+            background: #F2F4F7;
+            color: #475467;
+            border: 1px solid #E4E7EC;
+        }
+
+        .button-print {
+            color: white;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+
+            box-shadow: 0 4px 10px rgba(40, 127, 115, 0.25);
+        }
+
+        /* =========================
+           صفحة A4
+        ========================= */
+
+        .page {
+            width: 210mm;
+            height: 297mm;
+            margin: auto;
+
+            display: flex;
+            flex-direction: column;
+
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        /* =========================
+           الهيدر
+        ========================= */
+
+        .header {
+            min-height: 30mm;
+            padding: 10mm 9mm 7mm;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8mm;
+
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(255, 255, 255, 0.1),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    var(--navy),
+                    var(--primary)
+                );
+        }
+
+        .brand {
+            min-width: 50mm;
+        }
+
+        .brand h1 {
+            font-size: 20px;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        .brand p {
+            margin-top: 4px;
+            font-size: 9px;
+            font-weight: 500;
+            opacity: 0.82;
+        }
+
+        .patient-fields {
+            flex: 1;
+
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 5px;
+        }
+
+        .patient-field {
+            padding: 5px 7px;
+
+            background: rgba(255, 255, 255, 0.11);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+        }
+
+        .patient-field label {
+            display: block;
+            margin-bottom: 2px;
+
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 7px;
+            font-weight: 700;
+        }
+
+        .patient-field input {
+            width: 100%;
+            height: 18px;
+
+            color: white;
+            background: transparent;
+            border: 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.55);
+            outline: 0;
+
+            font-family: "Cairo", sans-serif;
+            font-size: 8px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        /* =========================
+           شريط التعليمات
+        ========================= */
+
+        .instructions {
+            min-height: 10mm;
+            padding: 2.5mm 7mm;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+
+            background: #F1F8F6;
+            border-bottom: 1px solid #D6EAE5;
+        }
+
+        .instructions strong {
+            color: var(--primary-dark);
+            font-size: 9px;
+        }
+
+        .instructions p {
+            color: #536B66;
+            font-size: 7.5px;
+            font-weight: 500;
+        }
+
+        .week-number {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            color: var(--primary-dark);
+            font-size: 8px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .week-number input {
+            width: 20mm;
+            height: 6mm;
+
+            background: white;
+            border: 1px solid #BEDDD6;
+            border-radius: 4px;
+            outline: 0;
+
+            font-family: "Cairo", sans-serif;
+            font-size: 8px;
+            text-align: center;
+        }
+
+        /* =========================
+           الجدول الأسبوعي
+        ========================= */
+
+        .agenda-container {
+            flex: 1;
+            min-height: 0;
+            padding: 4mm 5mm;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .agenda-grid {
+            flex: 1;
+            min-height: 0;
+
+            display: grid;
+            direction: rtl;
+
+            grid-template-columns: 17mm repeat(7, minmax(0, 1fr));
+            grid-template-rows: 8mm repeat(5, minmax(0, 1fr));
+
+            gap: 1.1mm;
+        }
+
+        /* رأس عمود الوجبات */
+
+        .corner-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: white;
+            background: var(--navy);
+            border-radius: 5px 5px 0 0;
+
+            font-size: 7px;
+            font-weight: 800;
+        }
+
+        /* عناوين الأيام */
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 2px;
+            color: white;
+            border-radius: 5px 5px 0 0;
+
+            font-size: 7.5px;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .day-saturday  { background: #3F8F52; }
+        .day-sunday    { background: #3478B9; }
+        .day-monday    { background: #DB7A22; }
+        .day-tuesday   { background: #8251A4; }
+        .day-wednesday { background: #D05B3D; }
+        .day-thursday  { background: #198A80; }
+        .day-friday    { background: #C94E78; }
+
+        /* أسماء الوجبات */
+
+        .meal-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            padding: 2px;
+            border-radius: 5px;
+
+            font-size: 7px;
+            font-weight: 800;
+            line-height: 1.45;
+            text-align: center;
+        }
+
+        .meal-label .meal-icon {
+            font-size: 13px;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .breakfast-label {
+            color: var(--breakfast-color);
+            background: var(--breakfast-bg);
+            border: 1px solid #F1D98B;
+        }
+
+        .snack-label {
+            color: var(--snack-color);
+            background: var(--snack-bg);
+            border: 1px solid #F3C49E;
+        }
+
+        .lunch-label {
+            color: var(--lunch-color);
+            background: var(--lunch-bg);
+            border: 1px solid #B5DDB9;
+        }
+
+        .dinner-label {
+            color: var(--dinner-color);
+            background: var(--dinner-bg);
+            border: 1px solid #BBC3E6;
+        }
+
+        /* خلية تسجيل الوجبة */
+
+        .meal-cell {
+            min-width: 0;
+            min-height: 0;
+
+            display: flex;
+            flex-direction: column;
+
+            padding: 2.2mm 1.5mm;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+
+            overflow: hidden;
+        }
+
+        .breakfast-cell { background: #FFFEF7; }
+        .snack-cell     { background: #FFFBF7; }
+        .lunch-cell     { background: #F8FCF6; }
+        .dinner-cell    { background: #F7F8FD; }
+
+        /* خانة الوقت */
+
+        .time-row {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            align-items: center;
+            gap: 3px;
+
+            padding-bottom: 1.5mm;
+            margin-bottom: 1.5mm;
+
+            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+        }
+
+        .time-row label {
+            color: #667085;
+            font-size: 5.8px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .time-row input {
+            width: 100%;
+            min-width: 0;
+            height: 5mm;
+
+            background: white;
+            border: 1px solid #D7DEDC;
+            border-radius: 3px;
+            outline: 0;
+
+            font-family: "Cairo", sans-serif;
+            font-size: 7px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .time-row input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(40, 127, 115, 0.08);
+        }
+
+        /* مكونات الوجبة */
+
+        .components-title {
+            margin-bottom: 1mm;
+
+            color: #667085;
+            font-size: 5.8px;
+            font-weight: 700;
+        }
+
+        .food-lines {
+            flex: 1;
+            min-height: 0;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+        }
+
+        .food-lines input {
+            width: 100%;
+            height: 7mm;
+
+            color: var(--text);
+            background: transparent;
+            border: 0;
+            border-bottom: 1px dotted #AEBAB7;
+            outline: 0;
+
+            font-family: "Cairo", sans-serif;
+            font-size: 7px;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .food-lines input:focus {
+            border-bottom-color: var(--primary);
+            background: rgba(40, 127, 115, 0.03);
+        }
+
+        /* =========================
+           الفوتر
+        ========================= */
+
+        .footer {
+            min-height: 20mm;
+            padding: 3mm 7mm;
+
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 7mm;
+
+            background: #F8FAF9;
+            border-top: 1px solid #DFE7E5;
+        }
+
+        .notes {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notes label {
+            color: var(--primary-dark);
+            font-size: 8px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .notes textarea {
+            flex: 1;
+            height: 13mm;
+            padding: 3px 5px;
+
+            color: var(--text);
+            background: white;
+            border: 1px solid #D4DFDC;
+            border-radius: 5px;
+            outline: 0;
+            resize: none;
+
+            font-family: "Cairo", sans-serif;
+            font-size: 7px;
+            line-height: 1.5;
+        }
+
+        .doctor-info {
+            min-width: 48mm;
+            padding-right: 5mm;
+
+            border-right: 1px solid #DDE4E2;
+            color: #697A76;
+
+            font-size: 6.5px;
+            line-height: 1.7;
+            text-align: right;
+        }
+
+        .doctor-info strong {
+            display: block;
+            color: var(--primary-dark);
+            font-size: 8px;
+        }
+
+        /* =========================
+           الطباعة
+        ========================= */
+
+        @media print {
+            html,
+            body {
+                width: 210mm;
+                height: 297mm;
+                padding: 0;
+                margin: 0;
+
+                background: white;
+                overflow: hidden;
+            }
+
+            .toolbar {
+                display: none !important;
+            }
+
+            .page {
+                width: 210mm;
+                height: 297mm;
+                min-height: 297mm;
+                max-height: 297mm;
+
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+        }
+
+        /* =========================
+           شاشة الموبايل
+        ========================= */
+
+        @media screen and (max-width: 850px) {
+            body {
+                overflow-x: auto;
+            }
+
+            .toolbar {
+                min-width: 210mm;
+            }
+
+            .page {
+                min-width: 210mm;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- شريط التحكم: لا يظهر داخل PDF -->
+    <div class="toolbar">
+        <div class="toolbar-title">
+            <strong>Food Agenda — أسبوع واحد</strong>
+            <span>اكتب البيانات أو اتركها فارغة ثم احفظ الصفحة بصيغة PDF</span>
+        </div>
+
+        <div class="toolbar-buttons">
+            <button
+                class="button button-clear"
+                type="button"
+                onclick="clearAgenda()"
+            >
+                مسح البيانات
+            </button>
+
+            <button
+                class="button button-print"
+                type="button"
+                onclick="window.print()"
+            >
+                حفظ كـ PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- صفحة A4 -->
+    <main class="page">
+
+        <!-- الهيدر -->
+        <header class="header">
+            <div class="brand">
+                <h1>🥗 Food Agenda</h1>
+                <p>سجل الطعام الأسبوعي لمتابعة التغذية أونلاين</p>
+            </div>
+
+            <div class="patient-fields">
+                <div class="patient-field">
+                    <label>اسم الحالة</label>
+                    <input type="text" aria-label="اسم الحالة">
+                </div>
+
+                <div class="patient-field">
+                    <label>الأسبوع من</label>
+                    <input type="text" aria-label="تاريخ بداية الأسبوع">
+                </div>
+
+                <div class="patient-field">
+                    <label>إلى</label>
+                    <input type="text" aria-label="تاريخ نهاية الأسبوع">
+                </div>
+
+                <div class="patient-field">
+                    <label>الوزن الحالي</label>
+                    <input type="text" aria-label="الوزن الحالي">
+                </div>
+            </div>
+        </header>
+
+        <!-- التعليمات -->
+        <section class="instructions">
+            <div>
+                <strong>تعليمات التسجيل</strong>
+                <p>
+                    اكتب وقت تناول كل وجبة، ثم سجّل جميع الأطعمة والمشروبات
+                    والكميات قدر الإمكان.
+                </p>
+            </div>
+
+            <div class="week-number">
+                <span>رقم الأسبوع:</span>
+                <input type="text" aria-label="رقم الأسبوع">
+            </div>
+        </section>
+
+        <!-- يتم إنشاء الجدول تلقائيًا -->
+        <section class="agenda-container">
+            <div class="agenda-grid" id="agendaGrid"></div>
+        </section>
+
+        <!-- الفوتر -->
+        <footer class="footer">
+            <div class="notes">
+                <label for="weeklyNotes">ملاحظات الأسبوع:</label>
+
+                <textarea
+                    id="weeklyNotes"
+                    aria-label="ملاحظات الأسبوع"
+                ></textarea>
+            </div>
+
+            <div class="doctor-info">
+                <strong>د. [اسم الطبيب]</strong>
+                أخصائي التغذية العلاجية<br>
+                الهاتف: [رقم الهاتف]<br>
+                حساب التواصل: [اسم الحساب]
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        /* أيام الأسبوع */
+        const days = [
+            { name: "السبت", className: "day-saturday" },
+            { name: "الأحد", className: "day-sunday" },
+            { name: "الاثنين", className: "day-monday" },
+            { name: "الثلاثاء", className: "day-tuesday" },
+            { name: "الأربعاء", className: "day-wednesday" },
+            { name: "الخميس", className: "day-thursday" },
+            { name: "الجمعة", className: "day-friday" }
+        ];
+
+        /* الوجبات مرتبة تحت بعضها */
+        const meals = [
+            {
+                name: "الإفطار",
+                icon: "🌅",
+                labelClass: "breakfast-label",
+                cellClass: "breakfast-cell"
+            },
+            {
+                name: "سناك صباحي",
+                icon: "🍎",
+                labelClass: "snack-label",
+                cellClass: "snack-cell"
+            },
+            {
+                name: "الغداء",
+                icon: "☀️",
+                labelClass: "lunch-label",
+                cellClass: "lunch-cell"
+            },
+            {
+                name: "سناك مسائي",
+                icon: "☕",
+                labelClass: "snack-label",
+                cellClass: "snack-cell"
+            },
+            {
+                name: "العشاء",
+                icon: "🌙",
+                labelClass: "dinner-label",
+                cellClass: "dinner-cell"
+            }
+        ];
+
+        const agendaGrid = document.getElementById("agendaGrid");
+
+        /* رأس الجدول */
+        agendaGrid.insertAdjacentHTML(
+            "beforeend",
+            `<div class="corner-cell">الوجبة</div>`
+        );
+
+        days.forEach((day) => {
+            agendaGrid.insertAdjacentHTML(
+                "beforeend",
+                `
+                <div class="day-header ${day.className}">
+                    ${day.name}
+                </div>
+                `
+            );
+        });
+
+        /* إنشاء صفوف الوجبات */
+        meals.forEach((meal) => {
+            agendaGrid.insertAdjacentHTML(
+                "beforeend",
+                `
+                <div class="meal-label ${meal.labelClass}">
+                    <span class="meal-icon">${meal.icon}</span>
+                    <span>${meal.name}</span>
+                </div>
+                `
+            );
+
+            days.forEach((day) => {
+                agendaGrid.insertAdjacentHTML(
+                    "beforeend",
+                    `
+                    <div class="meal-cell ${meal.cellClass}">
+
+                        <div class="time-row">
+                            <label>وقت الأكل</label>
+                            <input
+                                type="text"
+                                aria-label="وقت تناول ${meal.name} يوم ${day.name}"
+                            >
+                        </div>
+
+                        <div class="components-title">
+                            مكونات الوجبة
+                        </div>
+
+                        <div class="food-lines">
+                            <input
+                                type="text"
+                                aria-label="مكونات ${meal.name} يوم ${day.name}"
+                            >
+
+                            <input
+                                type="text"
+                                aria-label="مكونات ${meal.name} يوم ${day.name}"
+                            >
+
+                            <input
+                                type="text"
+                                aria-label="مكونات ${meal.name} يوم ${day.name}"
+                            >
+                        </div>
+
+                    </div>
+                    `
+                );
+            });
+        });
+
+        /* حفظ البيانات داخل المتصفح تلقائيًا */
+        const storageKey = "weeklyFoodAgendaDataV3";
+
+        function getEditableFields() {
+            return Array.from(
+                document.querySelectorAll("input, textarea")
+            );
+        }
+
+        function saveAgenda() {
+            const values = getEditableFields().map((field) => field.value);
+            localStorage.setItem(storageKey, JSON.stringify(values));
+        }
+
+        function restoreAgenda() {
+            const savedData = localStorage.getItem(storageKey);
+
+            if (!savedData) return;
+
+            try {
+                const values = JSON.parse(savedData);
+                const fields = getEditableFields();
+
+                fields.forEach((field, index) => {
+                    field.value = values[index] || "";
+                });
+            } catch (error) {
+                console.error("تعذر استعادة البيانات:", error);
+            }
+        }
+
+        function clearAgenda() {
+            const confirmation = confirm(
+                "هل أنت متأكد من مسح جميع البيانات المكتوبة؟"
+            );
+
+            if (!confirmation) return;
+
+            getEditableFields().forEach((field) => {
+                field.value = "";
+            });
+
+            localStorage.removeItem(storageKey);
+        }
+
+        document.addEventListener("input", saveAgenda);
+
+        restoreAgenda();
+    </script>
+
+</body>
+</html>
