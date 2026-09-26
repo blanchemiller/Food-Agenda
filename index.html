@@ -6,7 +6,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#157EAF">
     <title>Food Agenda</title>
-    <!-- Favicon / Logo -->
     <link rel="icon" type="image/png" href="logo.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -19,20 +18,17 @@
             --brand-pink-dark: #A5296F;
             --primary-light: #EBF5FA;
             --pink-light: #FDF0F7;
-            
             --bg: #F4F7FB;
             --card: #FFFFFF;
             --text: #1E293B;
             --text2: #64748B;
             --border: #E2E8F0;
-            
             --success: #10B981;
             --success-bg: #ECFDF5;
             --warning: #F59E0B;
             --warning-bg: #FFFBEB;
             --danger: #EF4444;
             --danger-bg: #FEF2F2;
-            
             --shadow: 0 4px 20px rgba(21, 126, 175, 0.08);
             --shadow-glow: 0 0 15px rgba(202, 59, 140, 0.2);
             --radius: 18px;
@@ -60,72 +56,40 @@
             transition: background 0.4s ease, color 0.4s ease;
         }
 
-        /* ===== 1. تأثير حركة دخول الصفحات ===== */
-        .page { 
-            display:none; 
-            padding: 16px; 
-            max-width: 480px; 
-            margin: 0 auto; 
-        }
-        .page.active { 
-            display: block; 
-            animation: slideUpFade 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
+        .page { display:none; padding:16px; max-width:480px; margin:0 auto; }
+        .page.active { display:block; animation: slideUpFade 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes slideUpFade {
-            from { opacity: 0; transform: translateY(16px) scale(0.99); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from { opacity:0; transform:translateY(16px) scale(0.99); }
+            to { opacity:1; transform:translateY(0) scale(1); }
         }
 
-        /* ===== 2. تأثير تموّج الهيدر الإشعاعي ===== */
+        /* ===== HEADER — لون واحد ثابت ===== */
         .top-header {
-            background: linear-gradient(135deg, var(--brand-blue) 0%, #6E4E98 50%, var(--brand-pink) 100%);
-            background-size: 200% 200%;
-            animation: gradientShift 8s ease infinite;
+            background: var(--brand-blue);
             color: white;
-            padding: 24px 20px 20px;
+            padding: 28px 20px 22px;
             border-radius: 0 0 26px 26px;
             margin: -16px -16px 20px;
             text-align: center;
-            box-shadow: 0 8px 25px rgba(202, 59, 140, 0.25);
+            box-shadow: 0 6px 20px rgba(21, 126, 175, 0.3);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: relative;
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
+        /* ===== LOGO — أكبر وأوضح ===== */
         .logo-img {
-            max-height: 65px;
-            max-width: 170px;
+            max-height: 100px;
+            max-width: 220px;
             object-fit: contain;
-            margin-bottom: 6px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
-            transition: transform 0.3s ease;
-        }
-        .logo-img:active {
-            transform: scale(0.95);
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
         }
 
-        .top-header h1 { 
-            font-size: 22px; 
-            font-weight: 900; 
-            letter-spacing: -0.3px;
-        }
-        .top-header p { 
-            font-size: 13px; 
-            opacity: 0.9; 
-            margin-top: 2px;
-            font-weight: 600;
-        }
+        .top-header h1 { font-size:22px; font-weight:900; }
+        .top-header p { font-size:13px; opacity:0.9; margin-top:2px; font-weight:600; }
 
-        /* ===== CARDS & UI ===== */
         .card {
             background: var(--card);
             border-radius: var(--radius);
@@ -133,358 +97,174 @@
             margin-bottom: 14px;
             box-shadow: var(--shadow);
             border: 1px solid var(--border);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            transition: border-color 0.2s ease;
         }
-        .card:hover {
-            border-color: rgba(21, 126, 175, 0.25);
-        }
+        .card:hover { border-color: rgba(21, 126, 175, 0.2); }
+        .card-title { font-size:16px; font-weight:800; margin-bottom:10px; display:flex; align-items:center; gap:8px; color:var(--brand-blue); }
+        .dark .card-title { color:#52B4E5; }
 
-        .card-title { 
-            font-size: 16px; 
-            font-weight: 800; 
-            margin-bottom: 10px; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px;
-            color: var(--brand-blue);
-        }
-        .dark .card-title { color: #52B4E5; }
-
-        .input-group { margin-bottom: 12px; }
-        .input-group label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 5px; color: var(--text); }
+        .input-group { margin-bottom:12px; }
+        .input-group label { display:block; font-size:14px; font-weight:700; margin-bottom:5px; }
         .input-field {
-            width: 100%; 
-            padding: 12px 14px; 
-            border: 2px solid var(--border); 
-            border-radius: 12px;
-            font-family: 'Cairo'; 
-            font-size: 15px; 
-            font-weight: 600; 
-            color: var(--text);
-            background: var(--card); 
-            outline: none; 
-            transition: all 0.2s ease;
+            width:100%; padding:12px 14px; border:2px solid var(--border); border-radius:12px;
+            font-family:'Cairo'; font-size:15px; font-weight:600; color:var(--text);
+            background:var(--card); outline:none; transition:all 0.2s ease;
         }
-        .input-field:focus { 
-            border-color: var(--brand-pink); 
-            box-shadow: 0 0 0 3px rgba(202, 59, 140, 0.15);
-        }
-        .input-field::placeholder { color: var(--text2); font-weight: 400; opacity: 0.7; }
-        textarea.input-field { min-height: 75px; resize: vertical; line-height: 1.5; }
+        .input-field:focus { border-color:var(--brand-pink); box-shadow:0 0 0 3px rgba(202,59,140,0.12); }
+        .input-field::placeholder { color:var(--text2); font-weight:400; opacity:0.7; }
+        textarea.input-field { min-height:75px; resize:vertical; line-height:1.5; }
 
-        /* ===== 3. تأثير نبض واهتزاز الأزرار (Buttons) ===== */
         .btn {
-            width: 100%; 
-            padding: 14px; 
-            border: none; 
-            border-radius: 14px;
-            font-family: 'Cairo'; 
-            font-size: 16px; 
-            font-weight: 800; 
-            cursor: pointer;
-            transition: transform 0.15s ease, box-shadow 0.2s ease; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            gap: 8px; 
-            margin-bottom: 10px;
-            position: relative;
-            overflow: hidden;
+            width:100%; padding:14px; border:none; border-radius:14px;
+            font-family:'Cairo'; font-size:16px; font-weight:800; cursor:pointer;
+            transition:transform 0.15s ease, box-shadow 0.2s ease;
+            display:flex; align-items:center; justify-content:center;
+            gap:8px; margin-bottom:10px;
         }
-        .btn:active { 
-            transform: scale(0.96) translateY(2px); 
-        }
+        .btn:active { transform:scale(0.96) translateY(2px); }
+        .btn-primary { background:var(--brand-pink); color:white; box-shadow:0 4px 14px rgba(202,59,140,0.3); }
+        .btn-success { background:var(--success); color:white; box-shadow:0 4px 14px rgba(16,185,129,0.25); }
+        .btn-info { background:var(--brand-blue); color:white; box-shadow:0 4px 14px rgba(21,126,175,0.25); }
+        .btn-outline { background:var(--card); color:var(--brand-blue); border:2px solid var(--brand-blue); }
+        .dark .btn-outline { color:#52B4E5; border-color:#52B4E5; }
+        .btn-small { padding:9px 14px; font-size:13px; width:auto; margin-bottom:0; border-radius:10px; }
 
-        .btn-primary { 
-            background: linear-gradient(135deg, var(--brand-blue), var(--brand-pink)); 
-            color: white; 
-            box-shadow: 0 4px 16px rgba(202, 59, 140, 0.3); 
-        }
-        .btn-primary:hover {
-            box-shadow: 0 6px 20px rgba(202, 59, 140, 0.4);
-        }
-
-        .btn-success { 
-            background: linear-gradient(135deg, #10B981, #059669); 
-            color: white; 
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
-        }
-        .btn-info { 
-            background: linear-gradient(135deg, var(--brand-blue), var(--brand-blue-dark)); 
-            color: white; 
-            box-shadow: 0 4px 14px rgba(21, 126, 175, 0.25);
-        }
-        .btn-outline { 
-            background: var(--card); 
-            color: var(--brand-blue); 
-            border: 2px solid var(--brand-blue); 
-        }
-        .dark .btn-outline { color: #52B4E5; border-color: #52B4E5; }
-
-        .btn-small { 
-            padding: 9px 14px; 
-            font-size: 13px; 
-            width: auto; 
-            margin-bottom: 0; 
-            border-radius: 10px;
-        }
-
-        /* ===== CALENDAR ===== */
-        .calendar { background: var(--card); border-radius: var(--radius); padding: 14px; border: 1px solid var(--border); }
-        .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-        .cal-header h3 { font-size: 16px; font-weight: 800; color: var(--brand-blue); }
-        .dark .cal-header h3 { color: #52B4E5; }
-        
+        .calendar { background:var(--card); border-radius:var(--radius); padding:14px; border:1px solid var(--border); }
+        .cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+        .cal-header h3 { font-size:16px; font-weight:800; color:var(--brand-blue); }
+        .dark .cal-header h3 { color:#52B4E5; }
         .cal-nav {
-            width: 36px; height: 36px; border-radius: 10px; border: 2px solid var(--border);
-            background: var(--card); font-size: 16px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; color: var(--text);
-            transition: all 0.2s ease;
+            width:36px; height:36px; border-radius:10px; border:2px solid var(--border);
+            background:var(--card); font-size:16px; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; color:var(--text);
+            transition:all 0.2s ease;
         }
-        .cal-nav:active { transform: scale(0.9); }
-
-        .cal-days-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 6px; }
-        .cal-days-header span { text-align: center; font-size: 12px; font-weight: 800; color: var(--text2); }
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-        
+        .cal-nav:active { transform:scale(0.9); }
+        .cal-days-header { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:6px; }
+        .cal-days-header span { text-align:center; font-size:12px; font-weight:800; color:var(--text2); }
+        .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
         .cal-day {
-            aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-            border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); 
-            border: 2px solid transparent; color: var(--text);
+            aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+            border-radius:10px; font-size:14px; font-weight:700; cursor:pointer;
+            transition:all 0.2s ease; border:2px solid transparent; color:var(--text);
         }
-        .cal-day:hover { background: var(--primary-light); transform: scale(1.08); }
-        .cal-day.empty { cursor: default; }
-        .cal-day.today { border-color: var(--brand-pink); color: var(--brand-pink); font-weight: 900; }
-        .cal-day.selected { 
-            background: linear-gradient(135deg, var(--brand-blue), var(--brand-pink)); 
-            color: white; 
-            box-shadow: 0 3px 10px rgba(202, 59, 140, 0.35);
-            transform: scale(1.05);
-        }
-        .cal-day.in-week { background: var(--primary-light); color: var(--brand-blue-dark); font-weight: 800; }
-
+        .cal-day:hover { background:var(--primary-light); transform:scale(1.08); }
+        .cal-day.empty { cursor:default; }
+        .cal-day.today { border-color:var(--brand-pink); color:var(--brand-pink); font-weight:900; }
+        .cal-day.selected { background:var(--brand-pink); color:white; box-shadow:0 3px 10px rgba(202,59,140,0.3); transform:scale(1.05); }
+        .cal-day.in-week { background:var(--primary-light); color:var(--brand-blue-dark); font-weight:800; }
         .week-display {
-            margin-top: 10px; padding: 10px; background: var(--pink-light);
-            border-radius: 12px; text-align: center; font-size: 13px;
-            font-weight: 700; color: var(--brand-pink-dark); line-height: 1.5;
-            border: 1px solid rgba(202, 59, 140, 0.15);
+            margin-top:10px; padding:10px; background:var(--pink-light);
+            border-radius:12px; text-align:center; font-size:13px;
+            font-weight:700; color:var(--brand-pink-dark); line-height:1.5;
+            border:1px solid rgba(202,59,140,0.12);
         }
 
-        /* ===== 4 & 5. تأثير انزلاق وتوهج الوجبات (Meal Accordion) ===== */
         .meal-card {
-            background: var(--card); 
-            border-radius: var(--radius); 
-            margin-bottom: 12px;
-            box-shadow: var(--shadow); 
-            border: 1.5px solid var(--border); 
-            overflow: hidden;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background:var(--card); border-radius:var(--radius); margin-bottom:12px;
+            box-shadow:var(--shadow); border:1.5px solid var(--border); overflow:hidden;
+            transition:border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .meal-card.active-glow {
-            border-color: var(--brand-pink);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .meal-header { 
-            padding: 12px 16px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            cursor: pointer; 
-            user-select: none;
-        }
-        .meal-header-right { display: flex; align-items: center; gap: 8px; }
-        .meal-icon { font-size: 24px; }
-        .meal-name { font-size: 16px; font-weight: 800; }
-        .meal-status { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
-        .status-done { background: var(--success-bg); color: var(--success); }
-        .status-pending { background: var(--warning-bg); color: var(--warning); }
-
-        .meal-body { 
-            padding: 0 16px 16px; 
-            display: none; 
-            animation: accordionOpen 0.25s ease-out forwards;
-        }
-        .meal-body.open { display: block; }
-
-        @keyframes accordionOpen {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .time-input-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-        .time-input-row label { font-size: 14px; font-weight: 700; white-space: nowrap; }
+        .meal-card.active-glow { border-color:var(--brand-pink); box-shadow:var(--shadow-glow); }
+        .meal-header { padding:12px 16px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+        .meal-header-right { display:flex; align-items:center; gap:8px; }
+        .meal-icon { font-size:24px; }
+        .meal-name { font-size:16px; font-weight:800; }
+        .meal-status { font-size:12px; font-weight:700; padding:3px 10px; border-radius:20px; }
+        .status-done { background:var(--success-bg); color:var(--success); }
+        .status-pending { background:var(--warning-bg); color:var(--warning); }
+        .meal-body { padding:0 16px 16px; display:none; animation:accordionOpen 0.25s ease-out forwards; }
+        .meal-body.open { display:block; }
+        @keyframes accordionOpen { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+        .time-input-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+        .time-input-row label { font-size:14px; font-weight:700; white-space:nowrap; }
         .time-input {
-            flex: 1; padding: 10px; border: 2px solid var(--border); border-radius: 10px;
-            font-family: 'Cairo'; font-size: 15px; font-weight: 700; text-align: center;
-            color: var(--text); background: var(--card); outline: none;
+            flex:1; padding:10px; border:2px solid var(--border); border-radius:10px;
+            font-family:'Cairo'; font-size:15px; font-weight:700; text-align:center;
+            color:var(--text); background:var(--card); outline:none;
         }
-        .time-input:focus { border-color: var(--brand-blue); }
+        .time-input:focus { border-color:var(--brand-blue); }
 
-        /* ===== 6. تأثير ارتداد أكواب الماء (Water Bounce) ===== */
-        .water-grid {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 5px;
-            margin-top: 8px;
-        }
+        .water-grid { display:grid; grid-template-columns:repeat(8,1fr); gap:5px; margin-top:8px; }
         .water-cup {
-            aspect-ratio: 1;
-            border: 1.5px solid #93C5FD;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: var(--card);
+            aspect-ratio:1; border:1.5px solid #93C5FD; border-radius:10px;
+            display:flex; align-items:center; justify-content:center; font-size:13px;
+            cursor:pointer; transition:all 0.25s cubic-bezier(0.175,0.885,0.32,1.275); background:var(--card);
         }
-        .water-cup:active {
-            transform: scale(0.8);
-        }
-        .water-cup.filled { 
-            background: #DBEAFE; 
-            border-color: var(--brand-blue); 
-            animation: waterPop 0.3s ease-out;
-        }
-        @keyframes waterPop {
-            0% { transform: scale(0.85); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
+        .water-cup:active { transform:scale(0.8); }
+        .water-cup.filled { background:#DBEAFE; border-color:var(--brand-blue); animation:waterPop 0.3s ease-out; }
+        @keyframes waterPop { 0%{transform:scale(0.85)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
 
-        /* ===== 7. تأثير انفجار المزاج (Mood Pop) ===== */
-        .mood-grid { display: flex; justify-content: space-around; margin-top: 8px; }
+        .mood-grid { display:flex; justify-content:space-around; margin-top:8px; }
         .mood-btn {
-            font-size: 30px; background: none; border: 3px solid transparent;
-            border-radius: 50%; padding: 6px; cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            opacity: 0.35;
+            font-size:30px; background:none; border:3px solid transparent;
+            border-radius:50%; padding:6px; cursor:pointer;
+            transition:all 0.3s cubic-bezier(0.175,0.885,0.32,1.275); opacity:0.35;
         }
-        .mood-btn.selected { 
-            opacity: 1; 
-            border-color: var(--brand-pink); 
-            background: var(--pink-light); 
-            transform: scale(1.25); 
-            box-shadow: 0 4px 12px rgba(202, 59, 140, 0.25);
-        }
+        .mood-btn.selected { opacity:1; border-color:var(--brand-pink); background:var(--pink-light); transform:scale(1.25); box-shadow:0 4px 12px rgba(202,59,140,0.2); }
 
-        /* ===== DATE NAV ===== */
-        .date-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .date-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
         .date-nav-btn {
-            width: 40px; height: 40px; border-radius: 12px; border: 2px solid var(--border);
-            background: var(--card); font-size: 18px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; color: var(--text);
-            transition: all 0.2s ease;
+            width:40px; height:40px; border-radius:12px; border:2px solid var(--border);
+            background:var(--card); font-size:18px; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; color:var(--text);
         }
-        .date-nav-btn:active { transform: scale(0.9); }
-        .date-display { font-size: 16px; font-weight: 800; color: var(--brand-blue); }
-        .dark .date-display { color: #52B4E5; }
+        .date-nav-btn:active { transform:scale(0.9); }
+        .date-display { font-size:16px; font-weight:800; color:var(--brand-blue); }
+        .dark .date-display { color:#52B4E5; }
 
-        /* ===== 8. شريط التقدم الأسبوعي المنساب ===== */
-        .progress-bar { 
-            width: 100%; 
-            height: 14px; 
-            background: var(--border); 
-            border-radius: 10px; 
-            overflow: hidden; 
-            margin-top: 10px; 
-        }
-        .progress-fill { 
-            height: 100%; 
-            border-radius: 10px; 
-            transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1); 
-            background: linear-gradient(90deg, var(--brand-blue), var(--brand-pink));
-        }
-        .progress-text { text-align: center; font-size: 24px; font-weight: 900; margin-top: 6px; color: var(--brand-pink); }
+        .progress-bar { width:100%; height:14px; background:var(--border); border-radius:10px; overflow:hidden; margin-top:10px; }
+        .progress-fill { height:100%; border-radius:10px; transition:width 0.7s ease; background:var(--brand-pink); }
+        .progress-text { text-align:center; font-size:24px; font-weight:900; margin-top:6px; color:var(--brand-pink); }
 
-        .day-summary { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
-        .day-summary:last-child { border-bottom: none; }
-        .day-summary-right { display: flex; align-items: center; gap: 8px; }
-        .day-dot { width: 10px; height: 10px; border-radius: 50%; }
-        .day-name-text { font-size: 15px; font-weight: 700; }
-        .day-meals-count { font-size: 13px; font-weight: 700; padding: 3px 12px; border-radius: 20px; }
+        .day-summary { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border); }
+        .day-summary:last-child { border-bottom:none; }
+        .day-summary-right { display:flex; align-items:center; gap:8px; }
+        .day-dot { width:10px; height:10px; border-radius:50%; }
+        .day-name-text { font-size:15px; font-weight:700; }
+        .day-meals-count { font-size:13px; font-weight:700; padding:3px 12px; border-radius:20px; }
 
-        /* ===== REPORT / IMAGE EXPORT CONTAINER ===== */
-        .report-container { 
-            background: white; 
-            color: #1E293B; 
-            border-radius: 16px; 
-            padding: 20px; 
-            margin-bottom: 14px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
-        .report-header { 
-            text-align: center; 
-            padding-bottom: 12px; 
-            border-bottom: 2px solid #E2E8F0; 
-            margin-bottom: 12px; 
-        }
-        .report-header h2 { font-size: 18px; color: var(--brand-blue); font-weight: 900; }
-        .report-header p { font-size: 12px; color: var(--text2); margin-top: 2px; }
-        
-        .report-day { 
-            background: #F8FAFC; 
-            border-radius: 12px; 
-            padding: 12px; 
-            margin-bottom: 8px; 
-            border-right: 4px solid var(--brand-pink); 
-        }
-        .report-day-title { font-size: 14px; font-weight: 800; color: #0F172A; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-        .report-meal { font-size: 13px; color: #334155; padding: 3px 0; line-height: 1.5; }
-        .report-meal b { color: var(--brand-blue); }
-        
-        .report-footer { 
-            text-align: center; 
-            padding-top: 12px; 
-            border-top: 2px solid #E2E8F0; 
-            margin-top: 12px; 
-            font-size: 11px; 
-            color: var(--text2); 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
+        .report-container { background:white; color:#1E293B; border-radius:16px; padding:20px; margin-bottom:14px; }
+        .report-header { text-align:center; padding-bottom:12px; border-bottom:2px solid #E2E8F0; margin-bottom:12px; }
+        .report-header h2 { font-size:18px; color:var(--brand-blue); font-weight:900; }
+        .report-header p { font-size:12px; color:#64748B; margin-top:2px; }
+        .report-day { background:#F8FAFC; border-radius:12px; padding:12px; margin-bottom:8px; border-right:4px solid var(--brand-pink); }
+        .report-day-title { font-size:14px; font-weight:800; color:#0F172A; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+        .report-meal { font-size:13px; color:#334155; padding:3px 0; line-height:1.5; }
+        .report-meal b { color:var(--brand-blue); }
+        .report-footer { text-align:center; padding-top:12px; border-top:2px solid #E2E8F0; margin-top:12px; font-size:11px; color:#94A3B8; }
 
-        /* ===== BOTTOM NAV ===== */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0; background: var(--card);
-            border-top: 1px solid var(--border); display: flex; justify-content: space-around;
-            padding: 6px 0; padding-bottom: max(6px, env(safe-area-inset-bottom));
-            z-index: 1000; box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+            position:fixed; bottom:0; left:0; right:0; background:var(--card);
+            border-top:1px solid var(--border); display:flex; justify-content:space-around;
+            padding:6px 0; padding-bottom:max(6px,env(safe-area-inset-bottom));
+            z-index:1000; box-shadow:0 -4px 20px rgba(0,0,0,0.06);
         }
         .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 1px;
-            padding: 5px 12px; border: none; background: none; cursor: pointer;
-            color: var(--text2); font-family: 'Cairo'; font-size: 11px; font-weight: 700;
-            transition: color 0.2s, transform 0.15s;
+            display:flex; flex-direction:column; align-items:center; gap:1px;
+            padding:5px 12px; border:none; background:none; cursor:pointer;
+            color:var(--text2); font-family:'Cairo'; font-size:11px; font-weight:700;
         }
-        .nav-item.active { color: var(--brand-pink); transform: translateY(-2px); }
-        .nav-item .nav-icon { font-size: 20px; }
+        .nav-item.active { color:var(--brand-pink); }
+        .nav-item .nav-icon { font-size:20px; }
 
         .theme-toggle {
-            position: fixed; top: 12px; left: 12px; width: 38px; height: 38px;
-            border-radius: 50%; background: var(--card); border: 1px solid var(--border);
-            font-size: 18px; cursor: pointer; z-index: 100;
-            display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow);
-            transition: transform 0.2s ease;
+            position:fixed; top:12px; left:12px; width:38px; height:38px;
+            border-radius:50%; background:var(--card); border:1px solid var(--border);
+            font-size:18px; cursor:pointer; z-index:100;
+            display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow);
         }
-        .theme-toggle:active { transform: rotate(45deg) scale(0.9); }
+        .theme-toggle:active { transform:scale(0.9); }
 
-        /* ===== 9. إشعار الـ Toast المرتد ===== */
         .toast {
-            position: fixed; top: 16px; left: 50%; 
-            transform: translateX(-50%) translateY(-120px);
-            background: linear-gradient(135deg, var(--brand-blue), var(--brand-pink));
-            color: white; padding: 12px 22px; border-radius: 14px;
-            font-family: 'Cairo'; font-size: 14px; font-weight: 700; z-index: 9999;
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 8px 25px rgba(202, 59, 140, 0.35);
+            position:fixed; top:16px; left:50%;
+            transform:translateX(-50%) translateY(-120px);
+            background:var(--brand-pink); color:white; padding:12px 22px; border-radius:14px;
+            font-family:'Cairo'; font-size:14px; font-weight:700; z-index:9999;
+            transition:transform 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+            box-shadow:0 6px 20px rgba(202,59,140,0.3);
         }
-        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.show { transform:translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
@@ -492,15 +272,13 @@
 <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
 <div class="toast" id="toast"></div>
 
-<!-- ========== PAGE 1: HOME ========== -->
+<!-- ===== HOME ===== -->
 <div class="page active" id="page-home">
     <div class="top-header">
-        <!-- مكان اللوجو الشفاف الخاص بك -->
-        <img src="logo.png" alt="Clinic Logo" class="logo-img" onerror="this.style.display='none'">
+        <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
         <h1>Food Agenda</h1>
         <p>أجندة متابعة التغذية الذكية</p>
     </div>
-    
     <div class="card">
         <div class="card-title">👤 بيانات الحالة</div>
         <div class="input-group">
@@ -508,42 +286,36 @@
             <input type="text" class="input-field" id="patientName" placeholder="اكتب اسمك هنا...">
         </div>
     </div>
-    
     <div class="card">
         <div class="card-title">📅 اختر بداية الأسبوع</div>
-        <p style="font-size: 13px; color: var(--text2); margin-bottom: 10px;">اضغط على اليوم المحدد لبداية المتابعة (يتم احتساب 7 أيام تلقائياً):</p>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:10px">اضغط على اليوم المحدد لبداية المتابعة (7 أيام تلقائياً):</p>
         <div class="calendar" id="calendar"></div>
         <div class="week-display" id="weekDisplay">اضغط على أي يوم لاختيار بداية الأسبوع</div>
     </div>
-    
     <button class="btn btn-primary" onclick="goToPage('daily')">▶️ ابدأ تسجيل اليوم</button>
     <button class="btn btn-outline" onclick="goToPage('weekly')">📊 عرض ملخص الأسبوع</button>
 </div>
 
-<!-- ========== PAGE 2: DAILY LOG ========== -->
+<!-- ===== DAILY ===== -->
 <div class="page" id="page-daily">
     <div class="top-header">
-        <img src="logo.png" alt="Clinic Logo" class="logo-img" onerror="this.style.display='none'">
+        <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
         <h1>📝 تسجيل اليوم</h1>
         <p id="todayPatient"></p>
     </div>
-
     <div class="date-nav">
         <button class="date-nav-btn" onclick="changeDay(-1)">→</button>
         <span class="date-display" id="dateDisplay"></span>
         <button class="date-nav-btn" onclick="changeDay(1)">←</button>
     </div>
-
     <div id="mealsContainer"></div>
-
     <div class="card">
         <div class="card-title">💧 شرب الماء</div>
-        <p style="font-size: 13px; color: var(--text2); margin-bottom: 6px;">اضغط على كل كوب تشربه يومياً:</p>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:6px">اضغط على كل كوب تشربه:</p>
         <div class="water-grid" id="waterGrid"></div>
     </div>
-
     <div class="card">
-        <div class="card-title">😊 كيف كان يومك ونشاطك؟</div>
+        <div class="card-title">😊 كيف كان يومك؟</div>
         <div class="mood-grid">
             <button class="mood-btn" onclick="selectMood(this,'😞')">😞</button>
             <button class="mood-btn" onclick="selectMood(this,'😐')">😐</button>
@@ -552,78 +324,62 @@
             <button class="mood-btn" onclick="selectMood(this,'🤩')">🤩</button>
         </div>
     </div>
-
     <div class="card">
-        <div class="card-title">📝 ملاحظات إضافية</div>
-        <textarea class="input-field" id="dayNotes" placeholder="أي ملاحظات للدكتور (جوع، طاقة، نشاط، نوع رياضة...)..."></textarea>
+        <div class="card-title">📝 ملاحظات</div>
+        <textarea class="input-field" id="dayNotes" placeholder="أي ملاحظات للدكتور..."></textarea>
     </div>
-
     <button class="btn btn-success" onclick="saveDay()">✅ حفظ تسجيل اليوم</button>
     <button class="btn btn-info" onclick="goToPage('report')">📄 عرض ملخص اليوم</button>
 </div>
 
-<!-- ========== PAGE 3: WEEKLY ========== -->
+<!-- ===== WEEKLY ===== -->
 <div class="page" id="page-weekly">
     <div class="top-header">
-        <img src="logo.png" alt="Clinic Logo" class="logo-img" onerror="this.style.display='none'">
+        <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
         <h1>📊 ملخص الأسبوع</h1>
         <p id="weeklyInfo"></p>
     </div>
-
     <div class="card">
-        <div class="card-title">📈 نسبة الالتزام الإجمالية</div>
+        <div class="card-title">📈 نسبة الالتزام</div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
         <div class="progress-text" id="progressText">0%</div>
     </div>
-
     <div class="card">
-        <div class="card-title">📅 تفاصيل أيام الأسبوع</div>
+        <div class="card-title">📅 تفاصيل الأيام</div>
         <div id="weeklyDetails"></div>
     </div>
-
     <button class="btn btn-primary" onclick="goToPage('report')">📄 عرض التقرير الكامل</button>
 </div>
 
-<!-- ========== PAGE 4: REPORT & EXPORT ========== -->
+<!-- ===== REPORT ===== -->
 <div class="page" id="page-report">
     <div class="top-header">
-        <img src="logo.png" alt="Clinic Logo" class="logo-img" onerror="this.style.display='none'">
+        <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
         <h1>📤 تقرير المتابعة</h1>
-        <p>جاهز للمشاركة والحفظ المباشر</p>
+        <p>جاهز للمشاركة والحفظ</p>
     </div>
-
     <div id="reportArea"></div>
-
-    <button class="btn btn-success" onclick="exportImage()">📸 حفظ كصورة (إرسال سهل عبر واتساب)</button>
+    <button class="btn btn-success" onclick="exportImage()">📸 حفظ كصورة</button>
     <button class="btn btn-info" onclick="copyReport()">📋 نسخ التقرير كنص</button>
-    <button class="btn btn-primary" onclick="shareReport()">📤 مشاركة سريعة</button>
-    <button class="btn btn-outline" onclick="goToPage('daily')">↩️ رجوع للتسجيل</button>
+    <button class="btn btn-primary" onclick="shareReport()">📤 مشاركة</button>
+    <button class="btn btn-outline" onclick="goToPage('daily')">↩️ رجوع</button>
 </div>
 
-<!-- ========== BOTTOM NAV ========== -->
+<!-- ===== BOTTOM NAV ===== -->
 <nav class="bottom-nav">
-    <button class="nav-item active" onclick="goToPage('home')" id="nav-home">
-        <span class="nav-icon">🏠</span>الرئيسية
-    </button>
-    <button class="nav-item" onclick="goToPage('daily')" id="nav-daily">
-        <span class="nav-icon">📝</span>تسجيل
-    </button>
-    <button class="nav-item" onclick="goToPage('weekly')" id="nav-weekly">
-        <span class="nav-icon">📊</span>ملخص
-    </button>
-    <button class="nav-item" onclick="goToPage('report')" id="nav-report">
-        <span class="nav-icon">📤</span>تقرير
-    </button>
+    <button class="nav-item active" onclick="goToPage('home')" id="nav-home"><span class="nav-icon">🏠</span>الرئيسية</button>
+    <button class="nav-item" onclick="goToPage('daily')" id="nav-daily"><span class="nav-icon">📝</span>تسجيل</button>
+    <button class="nav-item" onclick="goToPage('weekly')" id="nav-weekly"><span class="nav-icon">📊</span>ملخص</button>
+    <button class="nav-item" onclick="goToPage('report')" id="nav-report"><span class="nav-icon">📤</span>تقرير</button>
 </nav>
 
 <script>
-// ===== CONSTANTS =====
 const MEALS = [
-    { id:'breakfast', name:'الإفطار', icon:'🌅' },
-    { id:'snack1', name:'سناك صباحي', icon:'🍎' },
-    { id:'lunch', name:'الغداء', icon:'☀️' },
-    { id:'snack2', name:'سناك مسائي', icon:'☕' },
-    { id:'dinner', name:'العشاء', icon:'🌙' }
+    {id:'breakfast',name:'الإفطار',icon:'🌅'},
+    {id:'snack1',name:'سناك صباحي',icon:'🍎'},
+    {id:'lunch',name:'الغداء',icon:'☀️'},
+    {id:'snack2',name:'سناك مسائي',icon:'☕'},
+    {id:'dinner',name:'العشاء',icon:'🌙'}
 ];
 const DAY_NAMES = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 const DAY_COLORS = ['#157EAF','#CA3B8C','#6E4E98','#0D5C82','#D946EF','#0284C7','#E11D48'];
@@ -635,473 +391,128 @@ let calYear = new Date().getFullYear();
 let selectedWeekStart = null;
 let selectedWeekEnd = null;
 
-// ===== تحويل الوقت لصيغة 12 ساعة (AM / PM) =====
-function formatTime12(time24) {
-    if (!time24) return '—';
-    const parts = time24.split(':');
-    if (parts.length !== 2) return time24;
-    let hour = parseInt(parts[0]);
-    const min = parts[1];
-    const period = hour >= 12 ? 'PM' : 'AM';
-    hour = hour % 12;
-    if (hour === 0) hour = 12;
-    return `${hour}:${min} ${period}`;
+function formatTime12(t) {
+    if(!t) return '—';
+    const p=t.split(':'); if(p.length!==2) return t;
+    let h=parseInt(p[0]); const m=p[1]; const pr=h>=12?'PM':'AM';
+    h=h%12; if(h===0) h=12; return h+':'+m+' '+pr;
 }
 
-// ===== NAVIGATION =====
 function goToPage(page) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('page-' + page).classList.add('active');
-    const nb = document.getElementById('nav-' + page);
-    if (nb) nb.classList.add('active');
-    if (page === 'daily') initDailyPage();
-    if (page === 'weekly') initWeeklyPage();
-    if (page === 'report') initReportPage();
-    window.scrollTo(0, 0);
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    document.getElementById('page-'+page).classList.add('active');
+    const nb=document.getElementById('nav-'+page); if(nb) nb.classList.add('active');
+    if(page==='daily') initDailyPage();
+    if(page==='weekly') initWeeklyPage();
+    if(page==='report') initReportPage();
+    window.scrollTo(0,0);
 }
 
-// ===== THEME =====
 function toggleTheme() {
     document.body.classList.toggle('dark');
-    const isDark = document.body.classList.contains('dark');
-    document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    const d=document.body.classList.contains('dark');
+    document.getElementById('themeBtn').textContent=d?'☀️':'🌙';
+    localStorage.setItem('theme',d?'dark':'light');
 }
-function loadTheme() {
-    if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark');
-        document.getElementById('themeBtn').textContent = '☀️';
-    }
-}
+function loadTheme() { if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');document.getElementById('themeBtn').textContent='☀️';} }
+function showToast(msg) { const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500); }
 
-function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// ===== CALENDAR =====
 function renderCalendar() {
-    const cal = document.getElementById('calendar');
-    const firstDay = new Date(calYear, calMonth, 1);
-    const lastDay = new Date(calYear, calMonth + 1, 0);
-    const startDay = firstDay.getDay();
-    const daysInMonth = lastDay.getDate();
-    const today = new Date();
-
-    let html = `
-        <div class="cal-header">
-            <button class="cal-nav" onclick="calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar()">→</button>
-            <h3>${MONTH_NAMES[calMonth]} ${calYear}</h3>
-            <button class="cal-nav" onclick="calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar()">←</button>
-        </div>
-        <div class="cal-days-header">
-            <span>س</span><span>ح</span><span>ن</span><span>ث</span><span>ر</span><span>خ</span><span>ج</span>
-        </div>
-        <div class="cal-grid">
-    `;
-
-    const order = [6, 0, 1, 2, 3, 4, 5];
-    const startOffset = order.indexOf(startDay);
-    for (let i = 0; i < startOffset; i++) {
-        html += `<div class="cal-day empty"></div>`;
+    const cal=document.getElementById('calendar');
+    const fd=new Date(calYear,calMonth,1), ld=new Date(calYear,calMonth+1,0);
+    const sd=fd.getDay(), dim=ld.getDate(), today=new Date();
+    let h=`<div class="cal-header"><button class="cal-nav" onclick="calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar()">→</button><h3>${MONTH_NAMES[calMonth]} ${calYear}</h3><button class="cal-nav" onclick="calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar()">←</button></div><div class="cal-days-header"><span>س</span><span>ح</span><span>ن</span><span>ث</span><span>ر</span><span>خ</span><span>ج</span></div><div class="cal-grid">`;
+    const order=[6,0,1,2,3,4,5], so=order.indexOf(sd);
+    for(let i=0;i<so;i++) h+=`<div class="cal-day empty"></div>`;
+    for(let d=1;d<=dim;d++){
+        const dt=new Date(calYear,calMonth,d), dk=getDateKey(dt);
+        const isT=dk===getDateKey(today), isS=selectedWeekStart&&dk===getDateKey(selectedWeekStart);
+        const inW=selectedWeekStart&&selectedWeekEnd&&dt>=selectedWeekStart&&dt<=selectedWeekEnd;
+        let c='cal-day'; if(isT)c+=' today'; if(isS)c+=' selected'; else if(inW)c+=' in-week';
+        h+=`<div class="${c}" onclick="selectWeekDate(${calYear},${calMonth},${d})">${d}</div>`;
     }
-
-    for (let d = 1; d <= daysInMonth; d++) {
-        const date = new Date(calYear, calMonth, d);
-        const dateKey = getDateKey(date);
-        const isToday = dateKey === getDateKey(today);
-        const isSelected = selectedWeekStart && dateKey === getDateKey(selectedWeekStart);
-        const isInWeek = selectedWeekStart && selectedWeekEnd && date >= selectedWeekStart && date <= selectedWeekEnd;
-
-        let cls = 'cal-day';
-        if (isToday) cls += ' today';
-        if (isSelected) cls += ' selected';
-        else if (isInWeek) cls += ' in-week';
-
-        html += `<div class="${cls}" onclick="selectWeekDate(${calYear},${calMonth},${d})">${d}</div>`;
-    }
-
-    html += `</div>`;
-    cal.innerHTML = html;
+    h+=`</div>`; cal.innerHTML=h;
 }
 
-function selectWeekDate(y, m, d) {
-    const clicked = new Date(y, m, d);
-    selectedWeekStart = new Date(clicked);
-    selectedWeekEnd = new Date(selectedWeekStart);
-    selectedWeekEnd.setDate(selectedWeekStart.getDate() + 6);
-
-    const fmt = (dt) => `${DAY_NAMES[dt.getDay()]} ${dt.getDate()} ${MONTH_NAMES[dt.getMonth()]}`;
-    document.getElementById('weekDisplay').innerHTML =
-        `✅ أسبوع المتابعة من <strong>${fmt(selectedWeekStart)}</strong> إلى <strong>${fmt(selectedWeekEnd)}</strong>`;
-
-    currentDate = new Date(selectedWeekStart);
-    renderCalendar();
-    saveSettings();
+function selectWeekDate(y,m,d) {
+    selectedWeekStart=new Date(y,m,d);
+    selectedWeekEnd=new Date(selectedWeekStart);
+    selectedWeekEnd.setDate(selectedWeekStart.getDate()+6);
+    const fmt=dt=>`${DAY_NAMES[dt.getDay()]} ${dt.getDate()} ${MONTH_NAMES[dt.getMonth()]}`;
+    document.getElementById('weekDisplay').innerHTML=`✅ من <strong>${fmt(selectedWeekStart)}</strong> إلى <strong>${fmt(selectedWeekEnd)}</strong>`;
+    currentDate=new Date(selectedWeekStart); renderCalendar(); saveSettings();
 }
 
-function getDateKey(date) {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const d = String(date.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
-}
+function getDateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function formatDate(d){return `${DAY_NAMES[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}`}
+function changeDay(o){currentDate.setDate(currentDate.getDate()+o);initDailyPage();}
 
-function formatDate(date) {
-    return `${DAY_NAMES[date.getDay()]} ${date.getDate()}/${date.getMonth() + 1}`;
-}
-
-function changeDay(offset) {
-    currentDate.setDate(currentDate.getDate() + offset);
-    initDailyPage();
-}
-
-// ===== DAILY PAGE =====
 function initDailyPage() {
-    const name = document.getElementById('patientName').value || 'ضيف';
-    document.getElementById('todayPatient').textContent = `👤 ${name}`;
-    document.getElementById('dateDisplay').textContent = formatDate(currentDate);
-
-    const dateKey = getDateKey(currentDate);
-    const dayData = getDayData(dateKey);
-    const container = document.getElementById('mealsContainer');
-    container.innerHTML = '';
-
-    MEALS.forEach(meal => {
-        const md = dayData.meals[meal.id] || {};
-        const hasData = md.time || md.food;
-        container.innerHTML += `
-            <div class="meal-card ${hasData ? 'active-glow' : ''}" id="card-${meal.id}">
-                <div class="meal-header" onclick="toggleMeal('${meal.id}')">
-                    <div class="meal-header-right">
-                        <span class="meal-icon">${meal.icon}</span>
-                        <span class="meal-name">${meal.name}</span>
-                    </div>
-                    <span class="meal-status ${hasData ? 'status-done' : 'status-pending'}" id="status-${meal.id}">
-                        ${hasData ? '✅ تم' : '⏳ لم يُسجل'}
-                    </span>
-                </div>
-                <div class="meal-body" id="body-${meal.id}">
-                    <div class="time-input-row">
-                        <label>⏰ وقت الأكل:</label>
-                        <input type="time" class="time-input" id="time-${meal.id}" value="${md.time || ''}">
-                    </div>
-                    <div class="input-group">
-                        <label>🍽️ ماذا تناولت؟</label>
-                        <textarea class="input-field" id="food-${meal.id}" placeholder="اكتب مكونات الوجبة بالتفصيل...">${md.food || ''}</textarea>
-                    </div>
-                    <button class="btn btn-success btn-small" onclick="saveMeal('${meal.id}')">✅ حفظ الوجبة</button>
-                </div>
-            </div>
-        `;
+    const name=document.getElementById('patientName').value||'ضيف';
+    document.getElementById('todayPatient').textContent=`👤 ${name}`;
+    document.getElementById('dateDisplay').textContent=formatDate(currentDate);
+    const dk=getDateKey(currentDate), dd=getDayData(dk), c=document.getElementById('mealsContainer');
+    c.innerHTML='';
+    MEALS.forEach(m=>{
+        const md=dd.meals[m.id]||{}, has=md.time||md.food;
+        c.innerHTML+=`<div class="meal-card ${has?'active-glow':''}" id="card-${m.id}"><div class="meal-header" onclick="toggleMeal('${m.id}')"><div class="meal-header-right"><span class="meal-icon">${m.icon}</span><span class="meal-name">${m.name}</span></div><span class="meal-status ${has?'status-done':'status-pending'}" id="status-${m.id}">${has?'✅ تم':'⏳ لم يُسجل'}</span></div><div class="meal-body" id="body-${m.id}"><div class="time-input-row"><label>⏰ وقت الأكل:</label><input type="time" class="time-input" id="time-${m.id}" value="${md.time||''}"></div><div class="input-group"><label>🍽️ ماذا تناولت؟</label><textarea class="input-field" id="food-${m.id}" placeholder="اكتب مكونات الوجبة...">${md.food||''}</textarea></div><button class="btn btn-success btn-small" onclick="saveMeal('${m.id}')">✅ حفظ الوجبة</button></div></div>`;
     });
-
-    const wg = document.getElementById('waterGrid');
-    wg.innerHTML = '';
-    for (let i = 1; i <= 8; i++) {
-        const filled = (dayData.water || 0) >= i;
-        wg.innerHTML += `<div class="water-cup ${filled ? 'filled' : ''}" onclick="setWater(${i})">${filled ? '💧' : '○'}</div>`;
-    }
-
-    document.querySelectorAll('.mood-btn').forEach(btn => {
-        btn.classList.toggle('selected', btn.textContent.trim() === dayData.mood);
-    });
-
-    document.getElementById('dayNotes').value = dayData.notes || '';
+    const wg=document.getElementById('waterGrid'); wg.innerHTML='';
+    for(let i=1;i<=8;i++){const f=(dd.water||0)>=i;wg.innerHTML+=`<div class="water-cup ${f?'filled':''}" onclick="setWater(${i})">${f?'💧':'○'}</div>`;}
+    document.querySelectorAll('.mood-btn').forEach(b=>b.classList.toggle('selected',b.textContent.trim()===dd.mood));
+    document.getElementById('dayNotes').value=dd.notes||'';
 }
 
-function toggleMeal(id) { 
-    const body = document.getElementById('body-' + id);
-    body.classList.toggle('open');
-    document.getElementById('card-' + id).classList.toggle('active-glow', body.classList.contains('open'));
+function toggleMeal(id){const b=document.getElementById('body-'+id);b.classList.toggle('open');document.getElementById('card-'+id).classList.toggle('active-glow',b.classList.contains('open'));}
+function saveMeal(id){const dk=getDateKey(currentDate),dd=getDayData(dk);dd.meals[id]={time:document.getElementById('time-'+id).value,food:document.getElementById('food-'+id).value};saveDayData(dk,dd);const s=document.getElementById('status-'+id);s.className='meal-status status-done';s.textContent='✅ تم';document.getElementById('card-'+id).classList.add('active-glow');showToast('✅ تم حفظ الوجبة');}
+function setWater(c){const dk=getDateKey(currentDate),dd=getDayData(dk);dd.water=c;saveDayData(dk,dd);initDailyPage();}
+function selectMood(btn,mood){document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');const dd=getDayData(getDateKey(currentDate));dd.mood=mood;saveDayData(getDateKey(currentDate),dd);}
+function saveDay(){const dk=getDateKey(currentDate),dd=getDayData(dk);dd.notes=document.getElementById('dayNotes').value;saveDayData(dk,dd);showToast('✅ تم حفظ تسجيل اليوم!');}
+
+function getWeekDates(){if(selectedWeekStart){const d=[];for(let i=0;i<7;i++){const x=new Date(selectedWeekStart);x.setDate(selectedWeekStart.getDate()+i);d.push(x);}return d;}const d=[];for(let i=6;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);d.push(x);}return d;}
+
+function initWeeklyPage(){
+    const name=document.getElementById('patientName').value||'ضيف',dates=getWeekDates(),fmt=dt=>`${dt.getDate()}/${dt.getMonth()+1}`;
+    document.getElementById('weeklyInfo').textContent=`👤 ${name} | ${fmt(dates[0])} — ${fmt(dates[6])}`;
+    const det=document.getElementById('weeklyDetails');det.innerHTML='';let total=0;
+    dates.forEach(d=>{const dd=getDayData(getDateKey(d));let c=0;MEALS.forEach(m=>{if(dd.meals[m.id]&&(dd.meals[m.id].time||dd.meals[m.id].food))c++;});total+=c;
+    let cc,cb;if(c>=4){cc='var(--success)';cb='var(--success-bg)';}else if(c>=2){cc='var(--warning)';cb='var(--warning-bg)';}else{cc='var(--danger)';cb='var(--danger-bg)';}
+    det.innerHTML+=`<div class="day-summary"><div class="day-summary-right"><div class="day-dot" style="background:${DAY_COLORS[d.getDay()]}"></div><span class="day-name-text">${DAY_NAMES[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}</span><span style="font-size:18px">${dd.mood||''}</span></div><span class="day-meals-count" style="color:${cc};background:${cb}">${c}/5 وجبات</span></div>`;});
+    const pct=Math.round((total/35)*100);document.getElementById('progressFill').style.width=pct+'%';document.getElementById('progressText').textContent=pct+'%';
 }
 
-function saveMeal(id) {
-    const dateKey = getDateKey(currentDate);
-    const dayData = getDayData(dateKey);
-    dayData.meals[id] = {
-        time: document.getElementById('time-' + id).value,
-        food: document.getElementById('food-' + id).value
-    };
-    saveDayData(dateKey, dayData);
-    const s = document.getElementById('status-' + id);
-    s.className = 'meal-status status-done';
-    s.textContent = '✅ تم';
-    document.getElementById('card-' + id).classList.add('active-glow');
-    showToast('✅ تم حفظ الوجبة بنجاح');
+function buildReportHTML(){
+    const name=document.getElementById('patientName').value||'مريض',dates=getWeekDates(),fmt=dt=>`${DAY_NAMES[dt.getDay()]} ${dt.getDate()}/${dt.getMonth()+1}`;
+    let h=`<div class="report-container" id="reportContent"><div class="report-header"><img src="logo.png" alt="Logo" style="max-height:80px;margin-bottom:6px;" onerror="this.style.display='none'"><h2>🥗 تقرير متابعة التغذية</h2><p>👤 ${name} | ${fmt(dates[0])} — ${fmt(dates[6])}</p></div>`;
+    dates.forEach(d=>{const dd=getDayData(getDateKey(d));let has=false,mh='';
+    MEALS.forEach(m=>{const md=dd.meals[m.id];if(md&&(md.time||md.food)){has=true;mh+=`<div class="report-meal">${m.icon} <b>${m.name}</b> (${formatTime12(md.time)})<br>↤ ${md.food||'—'}</div>`;}});
+    if(has||dd.water||dd.notes) h+=`<div class="report-day" style="border-right-color:${DAY_COLORS[d.getDay()]}"><div class="report-day-title"><span style="color:${DAY_COLORS[d.getDay()]}">●</span> ${fmt(d)} ${dd.mood||''}</div>${mh}${dd.water?`<div class="report-meal">💧 <b>الماء:</b> ${dd.water}/8</div>`:''}${dd.notes?`<div class="report-meal">📝 ${dd.notes}</div>`:''}</div>`;});
+    h+=`<div class="report-footer">عيادة التغذية العلاجية • Food Agenda</div></div>`;return h;
+}
+function initReportPage(){document.getElementById('reportArea').innerHTML=buildReportHTML();}
+
+async function exportImage(){showToast('⏳ جاري إنشاء الصورة...');try{const c=await html2canvas(document.getElementById('reportContent'),{scale:2.5,backgroundColor:'#FFF',useCORS:true,logging:false});const l=document.createElement('a');l.download=`FoodAgenda-${getDateKey(new Date())}.png`;l.href=c.toDataURL();l.click();showToast('✅ تم حفظ الصورة!');}catch(e){showToast('❌ حدث خطأ');}}
+
+function copyReport(){
+    const name=document.getElementById('patientName').value||'مريض',dates=getWeekDates(),fmt=dt=>`${DAY_NAMES[dt.getDay()]} ${dt.getDate()}/${dt.getMonth()+1}`;
+    let t=`📋 تقرير التغذية الأسبوعي\n👤 ${name}\n📅 ${fmt(dates[0])} — ${fmt(dates[6])}\n━━━━━━━━━━━━━━━\n\n`;
+    dates.forEach(d=>{const dd=getDayData(getDateKey(d));let has=false,dt=`${fmt(d)} ${dd.mood||''}\n`;
+    MEALS.forEach(m=>{const md=dd.meals[m.id];if(md&&(md.time||md.food)){has=true;dt+=`${m.icon} ${m.name} (${formatTime12(md.time)}): ${md.food||'—'}\n`;}});
+    if(dd.water)dt+=`💧 ماء: ${dd.water}/8\n`;if(dd.notes)dt+=`📝 ${dd.notes}\n`;if(has)t+=dt+'\n';});
+    navigator.clipboard.writeText(t).then(()=>showToast('✅ تم النسخ!')).catch(()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('✅ تم النسخ!');});
 }
 
-function setWater(count) {
-    const dateKey = getDateKey(currentDate);
-    const dayData = getDayData(dateKey);
-    dayData.water = count;
-    saveDayData(dateKey, dayData);
-    initDailyPage();
-}
+async function shareReport(){if(navigator.share){try{const c=await html2canvas(document.getElementById('reportContent'),{scale:2.5,backgroundColor:'#FFF'});c.toBlob(async b=>{await navigator.share({title:'تقرير التغذية',files:[new File([b],'report.png',{type:'image/png'})]});});}catch(e){}}else showToast('⚠️ استخدم النسخ أو حفظ الصورة');}
 
-function selectMood(btn, mood) {
-    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    const dayData = getDayData(getDateKey(currentDate));
-    dayData.mood = mood;
-    saveDayData(getDateKey(currentDate), dayData);
-}
+function getAllData(){return JSON.parse(localStorage.getItem('foodAgendaData')||'{}');}
+function getDayData(dk){return getAllData()[dk]||{meals:{},water:0,mood:'',notes:''};}
+function saveDayData(dk,d){const a=getAllData();a[dk]=d;localStorage.setItem('foodAgendaData',JSON.stringify(a));}
+function saveSettings(){localStorage.setItem('foodAgendaSettings',JSON.stringify({name:document.getElementById('patientName').value,weekStart:selectedWeekStart?getDateKey(selectedWeekStart):null}));}
+function loadSettings(){const s=JSON.parse(localStorage.getItem('foodAgendaSettings')||'{}');if(s.name)document.getElementById('patientName').value=s.name;if(s.weekStart){const p=s.weekStart.split('-');selectedWeekStart=new Date(p[0],p[1]-1,p[2]);selectedWeekEnd=new Date(selectedWeekStart);selectedWeekEnd.setDate(selectedWeekStart.getDate()+6);currentDate=new Date(selectedWeekStart);calMonth=selectedWeekStart.getMonth();calYear=selectedWeekStart.getFullYear();const fmt=dt=>`${DAY_NAMES[dt.getDay()]} ${dt.getDate()} ${MONTH_NAMES[dt.getMonth()]}`;document.getElementById('weekDisplay').innerHTML=`✅ من <strong>${fmt(selectedWeekStart)}</strong> إلى <strong>${fmt(selectedWeekEnd)}</strong>`;}}
+document.getElementById('patientName').addEventListener('input',saveSettings);
 
-function saveDay() {
-    const dateKey = getDateKey(currentDate);
-    const dayData = getDayData(dateKey);
-    dayData.notes = document.getElementById('dayNotes').value;
-    saveDayData(dateKey, dayData);
-    showToast('✅ تم حفظ تسجيل اليوم بنجاح!');
-}
-
-// ===== WEEKLY =====
-function getWeekDates() {
-    if (selectedWeekStart) {
-        const dates = [];
-        for (let i = 0; i < 7; i++) {
-            const d = new Date(selectedWeekStart);
-            d.setDate(selectedWeekStart.getDate() + i);
-            dates.push(d);
-        }
-        return dates;
-    }
-    const dates = [];
-    for (let i = 6; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        dates.push(d);
-    }
-    return dates;
-}
-
-function initWeeklyPage() {
-    const name = document.getElementById('patientName').value || 'ضيف';
-    const dates = getWeekDates();
-    const fmt = (dt) => `${dt.getDate()}/${dt.getMonth() + 1}`;
-    document.getElementById('weeklyInfo').textContent =
-        `👤 ${name} | ${fmt(dates[0])} — ${fmt(dates[6])}`;
-
-    const details = document.getElementById('weeklyDetails');
-    details.innerHTML = '';
-    let totalMeals = 0;
-
-    dates.forEach(d => {
-        const dateKey = getDateKey(d);
-        const dayData = getDayData(dateKey);
-        let mealCount = 0;
-        MEALS.forEach(m => {
-            if (dayData.meals[m.id] && (dayData.meals[m.id].time || dayData.meals[m.id].food)) mealCount++;
-        });
-        totalMeals += mealCount;
-
-        let cc, cb;
-        if (mealCount >= 4) { cc = 'var(--success)'; cb = 'var(--success-bg)'; }
-        else if (mealCount >= 2) { cc = 'var(--warning)'; cb = 'var(--warning-bg)'; }
-        else { cc = 'var(--danger)'; cb = 'var(--danger-bg)'; }
-
-        details.innerHTML += `
-            <div class="day-summary">
-                <div class="day-summary-right">
-                    <div class="day-dot" style="background:${DAY_COLORS[d.getDay()]}"></div>
-                    <span class="day-name-text">${DAY_NAMES[d.getDay()]} ${d.getDate()}/${d.getMonth() + 1}</span>
-                    <span style="font-size:18px">${dayData.mood || ''}</span>
-                </div>
-                <span class="day-meals-count" style="color:${cc};background:${cb}">${mealCount}/5 وجبات</span>
-            </div>
-        `;
-    });
-
-    const pct = Math.round((totalMeals / 35) * 100);
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressText').textContent = pct + '%';
-}
-
-// ===== REPORT GENERATION =====
-function buildReportHTML() {
-    const name = document.getElementById('patientName').value || 'مريض';
-    const dates = getWeekDates();
-    const fmt = (dt) => `${DAY_NAMES[dt.getDay()]} ${dt.getDate()}/${dt.getMonth() + 1}`;
-
-    let html = `
-        <div class="report-container" id="reportContent">
-            <div class="report-header">
-                <img src="logo.png" alt="Logo" style="max-height:55px;margin-bottom:6px;" onerror="this.style.display='none'">
-                <h2>🥗 تقرير متابعة التغذية</h2>
-                <p>👤 الحالة: <strong>${name}</strong> | الفترة: ${fmt(dates[0])} — ${fmt(dates[6])}</p>
-            </div>
-    `;
-
-    dates.forEach(d => {
-        const dateKey = getDateKey(d);
-        const dayData = getDayData(dateKey);
-        let hasData = false;
-        let mealsHTML = '';
-
-        MEALS.forEach(m => {
-            const md = dayData.meals[m.id];
-            if (md && (md.time || md.food)) {
-                hasData = true;
-                mealsHTML += `
-                    <div class="report-meal">
-                        ${m.icon} <b>${m.name}</b> (${formatTime12(md.time)})
-                        <br>↤ ${md.food || '—'}
-                    </div>
-                `;
-            }
-        });
-
-        if (hasData || dayData.water || dayData.notes) {
-            html += `
-                <div class="report-day" style="border-right-color:${DAY_COLORS[d.getDay()]}">
-                    <div class="report-day-title">
-                        <span style="color:${DAY_COLORS[d.getDay()]}">●</span>
-                        ${fmt(d)} ${dayData.mood || ''}
-                    </div>
-                    ${mealsHTML}
-                    ${dayData.water ? `<div class="report-meal">💧 <b>الماء:</b> ${dayData.water}/8 أكواب</div>` : ''}
-                    ${dayData.notes ? `<div class="report-meal">📝 <b>ملاحظات:</b> ${dayData.notes}</div>` : ''}
-                </div>
-            `;
-        }
-    });
-
-    html += `
-            <div class="report-footer">
-                <span>عيادة التغذية العلاجية</span> • <span>Food Agenda</span>
-            </div>
-        </div>
-    `;
-    return html;
-}
-
-function initReportPage() {
-    document.getElementById('reportArea').innerHTML = buildReportHTML();
-}
-
-// ===== EXPORT IMAGE & SHARING =====
-async function exportImage() {
-    showToast('⏳ جاري إنشاء الصورة...');
-    const el = document.getElementById('reportContent');
-    try {
-        const canvas = await html2canvas(el, { scale: 2.5, backgroundColor: '#FFFFFF', useCORS: true, logging: false });
-        const link = document.createElement('a');
-        const name = document.getElementById('patientName').value || 'report';
-        link.download = `FoodAgenda-${name}-${getDateKey(new Date())}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        showToast('✅ تم حفظ الصورة بالاستوديو بنجاح!');
-    } catch (err) {
-        showToast('❌ حدث خطأ، يرجى تجربة النسخ');
-    }
-}
-
-function copyReport() {
-    const name = document.getElementById('patientName').value || 'مريض';
-    const dates = getWeekDates();
-    const fmt = (dt) => `${DAY_NAMES[dt.getDay()]} ${dt.getDate()}/${dt.getMonth() + 1}`;
-
-    let text = `📋 تقرير التغذية الأسبوعي\n`;
-    text += `👤 الحالة: ${name}\n`;
-    text += `📅 الفترة: ${fmt(dates[0])} — ${fmt(dates[6])}\n`;
-    text += `━━━━━━━━━━━━━━━\n\n`;
-
-    dates.forEach(d => {
-        const dayData = getDayData(getDateKey(d));
-        let hasData = false;
-        let dayText = `📌 ${fmt(d)} ${dayData.mood || ''}\n`;
-
-        MEALS.forEach(m => {
-            const md = dayData.meals[m.id];
-            if (md && (md.time || md.food)) {
-                hasData = true;
-                dayText += `${m.icon} ${m.name} (${formatTime12(md.time)}): ${md.food || '—'}\n`;
-            }
-        });
-
-        if (dayData.water) dayText += `💧 ماء: ${dayData.water}/8\n`;
-        if (dayData.notes) dayText += `📝 ملاحظات: ${dayData.notes}\n`;
-        if (hasData) text += dayText + `\n`;
-    });
-
-    navigator.clipboard.writeText(text).then(() => {
-        showToast('✅ تم نسخ التقرير بنجاح!');
-    }).catch(() => {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        showToast('✅ تم نسخ التقرير!');
-    });
-}
-
-async function shareReport() {
-    const name = document.getElementById('patientName').value || 'مريض';
-    const text = `تقرير التغذية الأسبوعي — ${name}`;
-    if (navigator.share) {
-        try {
-            const el = document.getElementById('reportContent');
-            const canvas = await html2canvas(el, { scale: 2.5, backgroundColor: '#FFFFFF' });
-            canvas.toBlob(async (blob) => {
-                const file = new File([blob], 'FoodAgenda-Report.png', { type: 'image/png' });
-                await navigator.share({ title: text, text: text, files: [file] });
-            });
-        } catch (err) {
-            try { await navigator.share({ title: text, text: text }); } catch (e) {}
-        }
-    } else {
-        showToast('⚠️ استخدم حفظ الصورة أو النسخ');
-    }
-}
-
-// ===== LOCAL STORAGE =====
-function getAllData() { return JSON.parse(localStorage.getItem('foodAgendaData') || '{}'); }
-function getDayData(dateKey) {
-    const all = getAllData();
-    return all[dateKey] || { meals: {}, water: 0, mood: '', notes: '' };
-}
-function saveDayData(dateKey, data) {
-    const all = getAllData();
-    all[dateKey] = data;
-    localStorage.setItem('foodAgendaData', JSON.stringify(all));
-}
-
-function saveSettings() {
-    const s = {
-        name: document.getElementById('patientName').value,
-        weekStart: selectedWeekStart ? getDateKey(selectedWeekStart) : null
-    };
-    localStorage.setItem('foodAgendaSettings', JSON.stringify(s));
-}
-
-function loadSettings() {
-    const s = JSON.parse(localStorage.getItem('foodAgendaSettings') || '{}');
-    if (s.name) document.getElementById('patientName').value = s.name;
-    if (s.weekStart) {
-        const parts = s.weekStart.split('-');
-        selectedWeekStart = new Date(parts[0], parts[1] - 1, parts[2]);
-        selectedWeekEnd = new Date(selectedWeekStart);
-        selectedWeekEnd.setDate(selectedWeekStart.getDate() + 6);
-        currentDate = new Date(selectedWeekStart);
-        calMonth = selectedWeekStart.getMonth();
-        calYear = selectedWeekStart.getFullYear();
-        const fmt = (dt) => `${DAY_NAMES[dt.getDay()]} ${dt.getDate()} ${MONTH_NAMES[dt.getMonth()]}`;
-        document.getElementById('weekDisplay').innerHTML =
-            `✅ أسبوع المتابعة من <strong>${fmt(selectedWeekStart)}</strong> إلى <strong>${fmt(selectedWeekEnd)}</strong>`;
-    }
-}
-
-document.getElementById('patientName').addEventListener('input', saveSettings);
-
-// ===== INIT =====
-loadTheme();
-loadSettings();
-renderCalendar();
+loadTheme();loadSettings();renderCalendar();
 </script>
 </body>
 </html>
